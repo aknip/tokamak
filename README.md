@@ -1,2 +1,2 @@
 # tokamak
-based on plasma...
+based on plasma.
