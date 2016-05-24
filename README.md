@@ -77,6 +77,8 @@ git add --all
 git commit -m "first commit"
 git push origin master
 
+git status
+
 http://slides.com/alexandraulsh/build-your-own-website-with-cloud9-and-github-pages#/
 
 CREATE BRANCH:
