@@ -1,0 +1,7 @@
+{
+  "Name": "MyApp",
+  "Offline-Support": {
+    "Application Cache": "on",
+    "Service Worker": "off"
+  }
+}

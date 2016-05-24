@@ -1,0 +1,158 @@
+/*  additional styles for loading animation see HTML-HEAD !   */
+
+/* Summary:         */
+/* PROJECT STYLES   */
+/* FAMOUS STLYES    */
+/* OPEN SANS STYLES */
+
+
+/* START: PROJECT STYLES */
+
+body, div {
+  font-family: "Open Sans";
+  font-weight: 200;
+  /* prevent text selection */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+
+body {
+  background: #fff;
+}
+
+.picBackground  {
+  background-repeat: no-repeat;
+  background-position: left top;
+  background-size: cover
+}
+
+.roundBox1 {
+    border-radius: 5px;
+}
+
+.shadow1 {
+    box-shadow: 0px 2px 24px 0 rgba(0,0,0, 0.4)
+}
+
+.shadow2 {
+    box-shadow: 0px 2px 12px 0 rgba(0,0,0, 0.5)
+}
+
+.circle {
+    border-radius: 9999em;
+}
+
+a {
+    color: orange;
+    text-decoration: none;
+    cursor: auto;
+}
+
+/* END: PROJECT STYLES */
+
+
+
+
+
+/* START: FAMOUS CSS */
+
+.famous-root {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    opacity: .999999; /* ios8 hotfix */
+    overflow: hidden;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+}
+
+.famous-container, .famous-group {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    overflow: visible;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    -webkit-backface-visibility: visible;
+    backface-visibility: visible;
+    pointer-events: none;
+}
+
+.famous-group {
+    width: 0px;
+    height: 0px;
+    margin: 0px;
+    padding: 0px;
+}
+
+.famous-surface {
+    position: absolute;
+    -webkit-transform-origin: center center;
+    transform-origin: center center;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    pointer-events: auto;
+}
+
+.famous-container-group {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+
+/* END: FAMOUS CSS*/
+
+
+
+
+/* START: FAMOUS-FLEX TABBAR CSS*/
+
+/* tabbar common */
+.ff-tabbar.item {
+  text-align: center;
+  white-space: nowrap;
+  color: #333333;
+  cursor: pointer;
+}
+.ff-tabbar.item > div {
+  /* align content vertically */
+  position: relative;
+  top: 70%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+.ff-tabbar.selectedItemOverlay {
+  border-bottom: 6px solid #1185c3;
+}
+
+/* END: FAMOUS-FLEX TABBAR CSS*/
+
+
+/* START: OPEN SANS CSS */
+
+
+
+
+
+/* END: OPEN SANS CSS */
+
+
+

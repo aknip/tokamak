@@ -1,0 +1,16 @@
+build
+node_modules
+bower_components
+
+# Cloud9 IDE - http://c9.io
+.c9revisions
+.c9
+
+## IntelliJ
+.idea/
+*.iml
+
+# OSX 
+.DS_Store
+.AppleDouble
+.LSOverride
