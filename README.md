@@ -78,10 +78,16 @@ clickedObj.setLayout(detailview-layout);
 var tmp1 = document.querySelectorAll('[style*="overflow: hidden"]');
 tmp1[0].style.overflow="visible"
 
+
 ## git Notes
 git add --all
 git commit -m "first commit"
 git push origin master
+
+for a shortcut add this lines to .git/config :
+[alias]
+    cmp = "!f() { git add -A && git commit -m \"$@\" && git push; }; f"
+Usage in terminal: git cmp "Long commit message goes here"
 
 git pull
 

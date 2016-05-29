@@ -26,6 +26,29 @@ function component(options) {
     _createSubComponentScroll.call(this);
     _createMainComponent.call(this);
   
+    console.log('logged always');
+    if (config.loggingMode == 'dev') {
+        Timer.setTimeout(function(){
+            console.log('logged only in dev mode');
+            require("script!./../../../node_modules/mocha/mocha.js");
+            var chai = require('chai');
+            var expect = chai.expect;
+            mocha.setup('bdd');
+            describe("test", function () {
+            	
+            	it("should return a random color", function () {
+            	
+            		var color = 123;
+            		var surf1 = document.querySelector('.famous-surface.card1')
+            		console.log(surf1);
+            		expect(color).is.not.empty;
+            
+            	});
+            	
+            });
+            mocha.run()
+        }, 20)
+    }
 }
 component.prototype = Object.create(View.prototype);
 component.prototype.constructor = component;
