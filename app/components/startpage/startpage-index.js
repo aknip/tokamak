@@ -21,34 +21,15 @@ var Plasma = require('./../plasma/plasma');
 //var PlasmaRedux = require('./../plasma/plasma-redux-router');
 
 
+
+
 function component(options) {
     View.apply(this, arguments);
     _createSubComponentScroll.call(this);
     _createMainComponent.call(this);
+    
+    test1();
   
-    console.log('logged always');
-    if (config.loggingMode == 'dev') {
-        Timer.setTimeout(function(){
-            console.log('logged only in dev mode');
-            require("script!./../../../node_modules/mocha/mocha.js");
-            var chai = require('chai');
-            var expect = chai.expect;
-            mocha.setup('bdd');
-            describe("test", function () {
-            	
-            	it("should return a random color", function () {
-            	
-            		var color = 123;
-            		var surf1 = document.querySelector('.famous-surface.card1')
-            		console.log(surf1);
-            		expect(color).is.not.empty;
-            
-            	});
-            	
-            });
-            mocha.run()
-        }, 20)
-    }
 }
 component.prototype = Object.create(View.prototype);
 component.prototype.constructor = component;
@@ -107,6 +88,7 @@ function _createMainComponent() {
     Plasma.registerLayout(that.layoutCtrl.plasmaID, that.layoutCtrl); 
 
     that.add(that.layoutCtrl);
+    
 }
 
 
@@ -196,6 +178,8 @@ function _createSubComponentScroll() {
         if ((data.delta == 0) || (position.get() < -99)){
             if ((Plasma.store.mainNav != 'menu01') || (Plasma.store.subNav != 0) ){
                 Plasma.navigator({mainNav: 'menu01', subNav: 0, animPos: [{animClass: 'startTileBack0'}, {animClass: 'startTileFront0'}, {animClass: 'startTileHead0'}, {animClass: 'startTileDot0'}]})  
+                
+                test2();
             }
         } 
         else {
@@ -393,7 +377,81 @@ function _clickOnTile1(el) {
    
 }
 
+function test1() {
+    function getPosSize (querySelector) {
+        var domObj = document.querySelector(querySelector);
+		var compStyle = window.getComputedStyle(domObj, null)
+		var matrixTMP= compStyle.getPropertyValue('-moz-transform') || compStyle.getPropertyValue('-webkit-transform');
+        var matrix = matrixTMP.split('(')[1].split(')')[0].split(',');
+        var domObjRect = domObj.getBoundingClientRect();
+		var domObjPosSize=[domObjRect.left, domObjRect.top, domObjRect.width, domObjRect.height,];
+	    return domObjPosSize
+    }
+    if (config.testingMode == true) {
+        Timer.setTimeout(function(){
+            require("script!./../../../node_modules/mocha/mocha.js");
+            var chai = require('chai');
+            var expect = chai.expect;
+            // clear and reset all suites defined before. Mocha only executes the following tests:
+            mocha.suite.suites = [];  
+            var iPhone6 = (window.innerWidth==375) && (window.innerHeight==667);
+            mocha.setup('bdd');
+            // Start general tests
+            describe("General Tests", function () {
+            	it("Plasma should be initialized", function () {
+            		expect(Plasma).is.not.empty;
+            	});
+            });
+            // Start UI tests, device specific
+            if (iPhone6==true) {
+                describe("iPhone6 Tests", function () {
+                    it("Position of Home Button is OK", function () {
+                		expect(getPosSize('.homebutton')).to.deep.equal([38, 30, 60, 60]);
+                	});
+                	it("Position of red rect is OK ", function () {
+                		expect(getPosSize('.startTileFront0')).to.deep.equal([60,200,255,417]);
+                	});
+                	
+                });
+            }
+            var mochaRunner =  mocha.run();
+            mochaRunner.on('suite end', function(suite) {
+                console.log('suite end');
+            });
+        
+           
+        }, 300)
+    }
+}
 
+function test2 () {
+    if (config.testingMode == true) {
+        Timer.setTimeout(function(){
+            console.log('DOING TEST 2');
+            require("script!./../../../node_modules/mocha/mocha.js");
+            var chai = require('chai');
+            var expect = chai.expect;
+            mocha.suite.suites = [];
+            mocha.setup('bdd');
+            document.querySelector('#mocha').innerHTML = "";
+            
+            describe("test2", function () {
+            	it("should return another value...", function () {
+            		var color = 123;
+            		var surf1 = document.querySelector('.famous-surface.card2')
+            		console.log(surf1);
+            		expect(color).is.not.empty;
+            	});
+            });
+            
+            var mochaRunner =  mocha.run();
+            mochaRunner.on('suite end', function(suite) {
+                console.log('suite end');
+            });
+            
+        }, 300)
+    }
+}
 
 
 module.exports = component;

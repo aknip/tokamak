@@ -12,7 +12,7 @@ sideEffectNode.textContent = 'Side Effect v7.2!';
 document.body.appendChild(sideEffectNode);
 
 console.log('logged always');
-if (config.loggingMode == 'dev') {
+if (config.loggingMode == true) {
   console.log('logged only in dev mode');
 }
 

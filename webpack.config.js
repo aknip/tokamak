@@ -5,12 +5,14 @@ const NpmInstallPlugin = require('npm-install-webpack-plugin');
 const AppcachePlugin = require('./build-tools/webpack-appcache-manifest.js');
 
 const TARGET = process.env.npm_lifecycle_event;
+const CLIOPTIONS = process.argv;
 const PATHS = {
   app: path.join(__dirname, 'app'),
   build: path.join(__dirname, 'build')
 };
 
 var exports = {};
+
 
 const common = {
   entry: {
@@ -94,10 +96,10 @@ if(TARGET === 'devserver' || TARGET === 'testserver' || !TARGET) {
         save: true // --save
       }),
       new webpack.DefinePlugin({
-        // Eliminates all logging for production / sets config to 'dev'
-        // In source code write: if (config.loggingMode == 'dev') { ... }
-        // Memo: a common mistake is not stringifying the "dev" string.
-        'config.loggingMode': JSON.stringify('dev')
+        // Sets logging and testing configs
+        // In source code write: if (config.loggingMode == true) { ... }
+        'config.loggingMode': JSON.stringify((CLIOPTIONS.indexOf('--devlog') > -1)),
+        'config.testingMode': JSON.stringify((CLIOPTIONS.indexOf('--devtest') > -1))
       })
     ]
   });
@@ -110,10 +112,10 @@ if(TARGET === 'build' || TARGET === 'full-build') {
   exports = merge(exports, {
     plugins: [
       new webpack.DefinePlugin({
-        // Eliminates all logging for production / sets config to 'prod'
-        // In source code write: if (config.loggingMode == 'dev') { ... }
-        // Memo: a common mistake is not stringifying the "dev" string.
-        'config.loggingMode': JSON.stringify('prod')
+        // Sets logging and testing configs
+        // In source code write: if (config.loggingMode == true) { ... }
+        'config.loggingMode': JSON.stringify(false),
+        'config.testingMode': JSON.stringify(false)
       }),
       //new webpack.optimize.UglifyJsPlugin({
       //  compress: {
