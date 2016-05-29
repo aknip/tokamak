@@ -10,6 +10,8 @@ const PATHS = {
   build: path.join(__dirname, 'build')
 };
 
+var exports = {};
+
 const common = {
   entry: {
     app: PATHS.app
@@ -20,13 +22,6 @@ const common = {
   },
   module: {
     loaders: [
-      {
-        // Test expects a RegExp! Note the slashes!
-        test: /\.css$/,
-        loaders: ['style', 'css'],
-        // Include accepts either a path or an array of paths.
-        include: PATHS.app
-      }
       //{ test: /\.jsx?$/,
       //  loader: 'babel-loader',
       //  query: {
@@ -36,9 +31,43 @@ const common = {
   }
 };
 
+var exports = merge(common, {});
+
+if(TARGET === 'devserver' || TARGET === 'build' || TARGET === 'full-build') {
+  exports = merge(exports, {
+    module: {
+      loaders: [
+        {
+          // Test expects a RegExp! Note the slashes!
+          test: /\.css$/,
+          loaders: ['style', 'css'],
+          // Include accepts either a path or an array of paths.
+          include: PATHS.app
+        }
+      ]
+  }
+  })
+}
+
+if( TARGET === 'testserver' ) {
+  exports = merge(exports, {
+    module: {
+      loaders: [
+         {
+              test: /(\.css|\.less)$/,
+              loader: 'null-loader',
+              exclude: [
+                  /build/
+              ]
+          },
+      ]
+    }
+  })
+}
+
 // Default configuration
-if(TARGET === 'start' || !TARGET) {
-  module.exports = merge(common, {
+if(TARGET === 'devserver' || TARGET === 'testserver' || !TARGET) {
+  exports = merge(exports, {
     devtool: 'eval-source-map',
     devServer: {
       contentBase: PATHS.build,
@@ -75,8 +104,10 @@ if(TARGET === 'start' || !TARGET) {
 }
 
 
+
+
 if(TARGET === 'build' || TARGET === 'full-build') {
-  module.exports = merge(common, {
+  exports = merge(exports, {
     plugins: [
       new webpack.DefinePlugin({
         // Eliminates all logging for production / sets config to 'prod'
@@ -99,3 +130,4 @@ if(TARGET === 'build' || TARGET === 'full-build') {
   });
 }
 
+module.exports = exports;

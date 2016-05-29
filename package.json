@@ -6,7 +6,9 @@
   "scripts": {
     "full-build": "node build-tools/create-icons.js && webpack",
     "build": "webpack",
-    "start": "webpack-dev-server",
+    "devserver": "webpack-dev-server",
+    "testserver": "webpack-dev-server 'mocha!./tests/mytest.test.js' --port 8081 --hot --inline",
+    "devtestserver": "npm run devserver & npm run testserver",
     "prod": "cd build && serve --port 8080",
     "create-icons": "node build-tools/create-icons.js"
   },
@@ -23,10 +25,15 @@
     "plop": "^1.5.0",
     "serve": "^1.4.0",
     "style-loader": "^0.13.0",
+    "null-loader": "^0.1.1",
     "svg2png": "^3.0.0",
     "webpack": "^1.12.13",
     "webpack-dev-server": "^1.14.1",
-    "webpack-merge": "^0.7.3"
+    "webpack-merge": "^0.7.3",
+    "chai": "^1.10.0",
+    "mocha": "^2.1.0",
+    "mocha-loader": "^0.7.0",
+    "script-loader": "^0.7.0"
   },
   "dependencies": {
     "appcache-nanny": "^1.0.3",

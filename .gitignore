@@ -2,6 +2,9 @@ build
 node_modules
 bower_components
 
+# Logs
+npm-debug.log
+
 # Cloud9 IDE - http://c9.io
 .c9revisions
 .c9

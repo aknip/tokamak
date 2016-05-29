@@ -22,7 +22,7 @@ changed in ws
 ## Commands
 
 #### Run dev server with HMR / Reload
-> npm run start
+> npm run devserver
 
 Important: Always use http-protocol for HMR-preview in the browser: http://webpack2016-aknip.c9users.io/index.html
 Does NOT WORK with https addresses (eg. cloud 9 default preview). 
@@ -56,6 +56,11 @@ Does NOT WORK with https addresses (eg. cloud 9 default preview).
 
 - Manual webpack command: >webpack ./app/index.js ./build/bundle.js
 
+##Testing
+- npm run testserver (in new terminal tab), open with port 8081
+- OR: npm run devtestserver (to start devserver and testserver together)
+- Mocha and Webpack config: http://stackoverflow.com/a/32818758 and https://www.youtube.com/watch?v=_sLLjPzOrXI
+
 ## Idea 1 for animating from a scrollviewitem to a detailview
 - see: https://ide.c9.io/aknip/famousflex, file animation.html, line 400:
 - get scrollview-index-nr. of clicked item, change layout to detailview
@@ -77,6 +82,8 @@ tmp1[0].style.overflow="visible"
 git add --all
 git commit -m "first commit"
 git push origin master
+
+git pull
 
 git status
 

@@ -14,14 +14,18 @@ var Utility = require('famous/utilities/Utility');
 var GenericSync = require("famous/inputs/GenericSync");
 var MouseSync   = require("famous/inputs/MouseSync");
 var TouchSync   = require("famous/inputs/TouchSync");
+var Timer =  require("famous/utilities/Timer");
+
     
 var Plasma = require('./../plasma/plasma');
 //var PlasmaRedux = require('./../plasma/plasma-redux-router');
 
+
 function component(options) {
-  View.apply(this, arguments);
-  _createSubComponentScroll.call(this);
-  _createMainComponent.call(this);
+    View.apply(this, arguments);
+    _createSubComponentScroll.call(this);
+    _createMainComponent.call(this);
+  
 }
 component.prototype = Object.create(View.prototype);
 component.prototype.constructor = component;
