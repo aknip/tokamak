@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<!--start offline : plop -->
+<html manifest="manifest.appcache">
+<!--end offline : plop -->
+
+<head>
+  <meta charset="utf-8" />
+  <title>MyApp</title>
+  <meta name="description" content="MyApp">
+  <meta name="application-name" content="MyApp;"/>
+  <link rel="manifest" href="manifest.json">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  <link rel="shortcut icon" href="favicon.ico" type="icons/main-icon-192x192.png"/>
+  <link rel="apple-touch-icon-precomposed" sizes="57x57" href="icons/apple-touch-icon-57x57.png" />
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="icons/apple-touch-icon-114x114.png" />
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="icons/apple-touch-icon-72x72.png" />
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="icons/apple-touch-icon-144x144.png" />
+  <link rel="apple-touch-icon-precomposed" sizes="60x60" href="icons/apple-touch-icon-60x60.png" />
+  <link rel="apple-touch-icon-precomposed" sizes="120x120" href="icons/apple-touch-icon-120x120.png" />
+  <link rel="apple-touch-icon-precomposed" sizes="76x76" href="icons/apple-touch-icon-76x76.png" />
+  <link rel="apple-touch-icon-precomposed" sizes="152x152" href="icons/apple-touch-icon-152x152.png" />
+  <link rel="icon" type="image/png" href="icons/favicon-196x196.png" sizes="196x196" />
+  <link rel="icon" type="image/png" href="icons/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/png" href="icons/favicon-32x32.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="icons/favicon-16x16.png" sizes="16x16" />
+  <link rel="icon" type="image/png" href="icons/favicon-128x128.png" sizes="128x128" />
+  
+  <meta name="msapplication-TileColor" content="#FFFFFF" />
+  <meta name="msapplication-TileImage" content="icons/mstile-144x144.png" />
+  <meta name="msapplication-square70x70logo" content="icons/mstile-70x70.png" />
+  <meta name="msapplication-square150x150logo" content="icons/mstile-150x150.png" />
+  <meta name="msapplication-wide310x150logo" content="icons/mstile-310x150.png" />
+  <meta name="msapplication-square310x310logo" content="icons/mstile-310x310.png" />
+  
+  <!--Styles for loading-animation / inline-stlyes due to better loading performance-->
+  <style>
+      body {
+          margin: 0;
+          padding: 0;
+          /*background: #2c3e50;*/
+      }
+  </style>
+  
+</head>
+
+<body>
+  <!--start loadingSpinner : plop -->
+  <div id="loadingBackground">
+      <!-- loading...  content is dynamically created, see below... -->
+      <script>
+         
+          if ( true==true ) {
+              
+              function animation0() {
+                  // Looping Circles / CSS-Animation
+                  // Create CSS: 
+                  var style = document.createElement('style');
+                  style.type = 'text/css';
+                  style.id = 'loaderStyle';
+                  style.innerHTML =
+                          '#loadingBackground {                   ' +
+                          '    background-color: #fff;         ' + //#2c3e50
+                          '    width: 100%;                       ' +
+                          '    height: 100vh;                     ' +
+                          '    position: fixed;                   ' +
+                          '    z-index: 10000;                    ' +
+                          '    opacity: 1;                        ' +
+                          '    transition: opacity 1s;            ' +
+                          '}                                      ' +
+                          '                                       ' +                
+                          '#loadingBackground.fade {              ' +
+                          '    opacity: 0;                        ' +
+                          '}                                      ' +
+                          '                                       ' +
+                          '.spinner {                             ' +
+                          '    width: 40px;                       ' +
+                          '    height: 40px;                      ' +
+                          '                                       ' +
+                          '    position: absolute;                ' +
+                          '    top: 50%;                          ' +
+                          '    left:50%;                          ' +
+                          '    transform: translate(-50%,-50%)    ' +
+                          '}                                      ' +
+                          '                                       ' +
+                          '.double-bounce1, .double-bounce2 {     ' +
+                          '    width: 100%;                       ' +
+                          '    height: 100%;                      ' +
+                          '    border-radius: 50%;                ' +
+                          '    background-color: #2c3e50;         ' +
+                          '    opacity: 0.6;                      ' +
+                          '    position: absolute;                ' +
+                          '    top: 0;                            ' +
+                          '    left: 0;                           ' +
+                          '                                       ' +
+                          '    -webkit-animation: sk-bounce 2.0s infinite ease-in-out;' +
+                          '    animation: sk-bounce 2.0s infinite ease-in-out;' +
+                          '}                                      ' +
+                          '                                       ' +
+                          '.double-bounce2 {                      ' +
+                          '    -webkit-animation-delay: -1.0s;    ' +
+                          '    animation-delay: -1.0s;            ' +
+                          '}' +
+                          '                                       ' +
+                          '@-webkit-keyframes sk-bounce {         ' +
+                          '    0%, 100% { -webkit-transform: scale(0.0) }' +
+                          '50% { -webkit-transform: scale(1.0) }  ' +
+                          '}                                      ' +
+                          '                                       ' +
+                          '@keyframes sk-bounce {                 ' +
+                          '    0%, 100% {                         ' +
+                          '        transform: scale(0.0);         ' +
+                          '        -webkit-transform: scale(0.0); ' +
+                          '   } 50% {                             ' +
+                          '    transform: scale(1.0);             ' +
+                          '    -webkit-transform: scale(1.0);     ' +
+                          '   }                                   ' +
+                          '}                                      ';
+      
+                  document.querySelector('#loadingBackground').appendChild(style);
+      
+                  // Create HTML:
+                  var
+                          outerDIV = document.createElement('div'),
+                          innerDIV1 = document.createElement('div'),
+                          innerDIV2 = document.createElement('div');
+                  outerDIV.id = 'spinner';
+                  outerDIV.className = 'spinner';
+                  innerDIV1.className = 'double-bounce1';
+                  innerDIV2.className = 'double-bounce2';
+                  outerDIV.appendChild(innerDIV1);
+                  outerDIV.appendChild(innerDIV2);
+                  document.querySelector('#loadingBackground').appendChild(outerDIV);
+      
+                  // Resulting structure:
+                  // <div class="spinner">
+                  //    <div class="double-bounce1"></div>
+                  //    <div class="double-bounce2"></div>
+                  // </div>
+      
+      
+                  // on link-click (use class'fadeout') fade background in
+                  document.body.addEventListener("click", function (el) {
+                      if (el.srcElement.className == 'fadeout') {
+                          console.log('switch app / link');
+                          var loadingBackgr = document.querySelector('#loadingBackground');
+                          loadingBackgr.style.display = "block"; // remove spinners, only blue background fades in
+                          document.querySelector('.spinner').remove();
+                          setTimeout(function () {
+                              var loadingBackgr = document.querySelector('#loadingBackground');
+                              loadingBackgr.className = loadingBackgr.className ? '' : 'fade';
+                          }, 50);
+                      }
+                  }, false);
+              }
+      
+              function animation1() {
+                  // Spirograph // Canvas-Animation
+                  // No CSS needed
+                  var c = document.createElement('canvas'),
+                          $ = c.getContext('2d'),
+                          w = c.width = window.innerWidth,
+                          h = c.height = window.innerHeight,
+                          d, l,
+                          t = 0;
+      
+                  document.querySelector('#loadingBackground').appendChild(c);
+      
+                  function init() {
+                      reset();
+                      loop();
+                  }
+      
+                  function draw() {
+                      var z = 15 - Math.sin(t) * 15 - Math.cos(t);
+                      $.fillStyle = 'rgba(0, 0, 0, 0.025)';
+                      $.fillRect(0, 0, w, h);
+                      for (var i = 0; l > i; i++) {
+                          var r = ((i * d / 3) / l) * Math.sin((z * 100) + i),
+                                  x = Math.sin(i) * r + (w / 2),
+                                  y = Math.cos(i) * r + (h / 2);
+                          $.beginPath();
+                          $.fillStyle = 'rgba(123, 153, 185, 1)';
+                          $.fillRect(x, y, 1, 1);
+                      }
+                      t += 0.00001;
+                  }
+      
+                  function reset() {
+                      w = c.width = window.innerWidth;
+                      h = c.height = window.innerHeight;
+                      d = Math.min(w, h) - 50;
+                      l = Math.round(d / 10);
+                  }
+      
+                  function loop() {
+                      requestAnimationFrame(loop);
+                      draw();
+                  }
+      
+                  window.addEventListener('resize', reset);
+      
+                  init();
+              }
+  
+          
+              //switch (Math.floor( Math.random() * 2 )) {
+              switch (0) {
+                  case 0:
+                      animation0();
+                      break;
+                  case 1:
+                      animation1();
+                      break;
+              }
+      
+      
+              // Fadeout loading animation
+      
+              window.onload = function () {
+      
+                  // Fadeout with delay(!) of 300ms - looks nicer...
+                  setTimeout(function () {
+                      var loadingBackgr = document.querySelector('#loadingBackground');
+                      loadingBackgr.className = loadingBackgr.className ? '' : 'fade';
+                      setTimeout(function () {
+                          var loadingBackgr = document.querySelector('#loadingBackground');
+                          loadingBackgr.style.display = "none";
+                          //console.log('loading fadeout finished');
+                      }, 300);
+                  }, 300);
+              };
+          }
+  
+      </script>
+      
+  </div>
+  <!--end loadingSpinner : plop -->
+  <script src='/bundle.js'></script>
+</body>
+
+</html>

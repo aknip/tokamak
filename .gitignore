@@ -1,6 +1,8 @@
-build
 node_modules
 bower_components
+
+build/bundle.js
+build/manifest.appcache
 
 # Logs
 npm-debug.log
