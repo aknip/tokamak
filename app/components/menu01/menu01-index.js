@@ -8,6 +8,8 @@ var ListLayout = require('famous-flex/src/layouts/ListLayout');
 var Utility = require('famous/utilities/Utility');
 var Plasma = require('./../plasma/plasma');
 
+var Menu01detail = require('./menu01-detail');
+
 function component(options) {
   View.apply(this, arguments);
   _createSubComponentListScroll.call(this);
@@ -26,7 +28,6 @@ function _createMainComponent() {
     
     var that = this;
     var devicename = that.options;
-    
     //
     // MAIN / SOURROUNDING LAYOUT
     //
@@ -49,7 +50,8 @@ function _createMainComponent() {
           dot0: dot0,
           dot1: dot1,
           dot2: dot2,
-          swiper: that.layoutCtrlListscroll
+          swiper: that.layoutCtrlListscroll,
+          detail: new Menu01detail({name: 'Menu 01 detail'})
         }
     });
     
@@ -122,6 +124,12 @@ function _createMainComponent() {
                     scale: [1,1,1],
                     opacity: 0
                   });
+                  context.set('detail', {
+                      translate: [0, 1000, 30],
+                      size: [context.size[0], 50],
+                      scale: [1,1,1],
+                      opacity: 0
+                  });
                   break;
               case 'TO':
                   context.set('headerBackground', {
@@ -166,6 +174,12 @@ function _createMainComponent() {
                     translate: [0, 120, 20],
                     opacity: 1
                   });
+                  context.set('detail', {
+                      translate: [0, context.size[1]-50, 30],
+                      size: [context.size[0], 50],
+                      scale: [1,1,1],
+                      opacity: 1
+                  });
                   break;
               case 'HIDE':
                   context.set('headerBackground', {
@@ -192,7 +206,7 @@ function _createMainComponent() {
                   context.set('dot1', {
                     size: [50,50],
                     scale: [1,1,1],
-                    translate: [context.size[0]*2, 180, 10],
+                    translate: [context.size[0]*2, context.size[1]-50, 30],
                     opacity: 1
                   });
                   context.set('dot2', {
@@ -205,6 +219,12 @@ function _createMainComponent() {
                     size: [context.size[0], context.size[1]-120],
                     translate: [context.size[0]*2, 120, 20],
                     opacity: 1
+                  });
+                  context.set('detail', {
+                      translate: [0, 1000, 30],
+                      size: [context.size[0]*2, 50],
+                      scale: [1,1,1],
+                      opacity: 1
                   });
                   break;  
             }

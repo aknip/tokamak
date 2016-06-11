@@ -7,7 +7,7 @@ var Timer =  require("famous/utilities/Timer");
 
 var Plasma = require('./../plasma/plasma');
 
-var Menu01 = require('./../menu01/menu01-index');
+var Menu01index = require('./../menu01/menu01-index');
 var Startpage = require('./../startpage/startpage-index');
 
 function component(options) {
@@ -30,7 +30,7 @@ component.prototype.redraw = function (store) {
     //TODO: only switch main nav if needed / main nav is different to current scroll state
     this.layoutCtrl.setLayoutOptions({mainNav: store.mainNav});
     this.startpage.layoutCtrl.goToPage(store.subNav);
-    this.menu01.layoutCtrl.goToPage(store.subNav);
+    this.menu01index.layoutCtrl.goToPage(store.subNav);
 }
 
 function _createComponent() {
@@ -39,8 +39,8 @@ function _createComponent() {
     var devicename = that.options;
     
     that.startpage = new Startpage({name: 'Startpage'});
-    that.menu01 = new Menu01({name: 'Menu 01'})
-    
+    that.menu01index = new Menu01index({name: 'Menu 01 index'});
+
     var mochaTestreportSurf = new Surface({content: '<div id="mocha"></div>', properties: {backgroundColor: '#ddd'}, classes:['mochaTestreportSurf', 'shadow3', 'animated', 'cornerToRadius']});
     mochaTestreportSurf.on('click', function(el){
         var newZoom = that.layoutCtrl.getLayoutOptions().mochaTestreportZoom;
@@ -61,16 +61,16 @@ function _createComponent() {
                 newZoom = 0.25;
                 document.querySelector('.mochaTestreportSurf').classList.remove('radiusToCorner');
                 document.querySelector('.mochaTestreportSurf').classList.add('cornerToRadius');
-                break;    
+                break;
         }
         that.layoutCtrl.setLayoutOptions(
             {mochaTestreportZoom: newZoom}
         );
     })
-    
+
     var mainLayoutElements = {
         'startpageContext': that.startpage, //startpageHorzScrollView,
-        'menu01Context': that.menu01, // menu01horzScrollView,
+        'menu01Index': that.menu01index, // menu01horzScrollView,
         'homeButton': new Surface({content: 'HOME', properties: {color: '#fff', backgroundColor: '#2c3e50'}, classes: ['homebutton']}),
         'mochaTestreport': mochaTestreportSurf
     }
@@ -100,7 +100,7 @@ function _createComponent() {
                 size: [context.size[0]/2, context.size[1]],
                 translate: [100,100,0]
             });
-            context.set('menu01Context', {
+            context.set('menu01Index', {
                 size: [context.size[0]/2, context.size[1]],
                 translate: [0,0,20]
             });
@@ -114,7 +114,7 @@ function _createComponent() {
                 size: [context.size[0], context.size[1]],
                 translate: [0,0,0]
             });
-            context.set('menu01Context', {
+            context.set('menu01Index', {
                 size: [context.size[0], context.size[1]],
                 translate: [0,0,20]
             });

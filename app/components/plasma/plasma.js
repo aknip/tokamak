@@ -1,7 +1,7 @@
 
 var Engine = require('famous/core/Engine');
 
-var initState = {mainNav: 'startpage', subNav: 0, mainNavFrom: 0, subNavFrom: 0, animPos: []};
+var initState = {mainNav: 'startpage', subNav: 0, animPos: []};
 
 let plasma = {
   deviceBreakpoints: {
@@ -231,11 +231,7 @@ let plasma = {
       
       
       console.log('Check Anim');
-      //console.log(this.store.mainNav);
-      //console.log(this.history.slice(-1)[0].mainNavFrom);
-      //if (this.store.mainNav == this.history[0].mainNav) {
-        
-      //}
+
       
       //
       // TODO: Prüfen, wann was ausgeführt wird
@@ -470,7 +466,7 @@ plasma.appReducer = function (state, action) {
         //return action.params
         break;
       case 'NAVIGATE':
-        //console.log('NAVIGATE!');
+        console.log('NAVIGATE!');
         //console.log(action.params);
         //this.history.push(state);
         returnState = Object.assign({}, state, action.params);
@@ -481,6 +477,7 @@ plasma.appReducer = function (state, action) {
         return returnState;
         break;
       case 'INIT':
+        console.log('INIT!');
         returnState = this.initState;
         return returnState
         break;    
@@ -505,14 +502,17 @@ plasma.router = function (event) {
     plasma.linkClicked = false;
     plasma.backButtonClicked = false;
   }
-  // Current route url (getting rid of '#' in hash as well):
-  var url = location.hash.slice(1) || '/';
+  // Current route url (getting rid of '#' in hash as well)
+  // im empty # set default/initState
+  var url = location.hash.slice(1) || encodeURIComponent(JSON.stringify(plasma.initState));
   var urlStore = {};
   var oldStore = {};
-  //console.log('HASH CHANGE!');
+  console.log('HASH CHANGE!');
   var oldHash = event.oldURL || '';
   if (oldHash.indexOf('#') == -1 ) {
-    oldHash = encodeURIComponent(JSON.stringify(this.initState))
+    // initial load, no referrer in URL
+    //oldHash = encodeURIComponent(JSON.stringify(plasma.initState))
+    oldHash = url
   }
   else {
     oldHash = oldHash.split("#").pop();
@@ -528,27 +528,20 @@ plasma.router = function (event) {
         // compare target url with pre-last history entry
         // only save last ...NavFrom if not navigating back (keep history URL untouched)
         if (backHistoryCompare == false) {
-          
-          // TODO
-          // brauchen wir ...NavFrom eigentlich? oder können wir nicht bei Bedarf auf this.history zurückgreifen?
-          
-          
-          //urlStore.mainNavFrom = oldStore.mainNav;
-          //urlStore.subNavFrom = oldStore.subNav;
+
         }
         //document.dispatchEvent(new CustomEvent('action', { detail: { type: 'SET-STATE', params: urlStore }}))
         document.dispatchEvent(new CustomEvent('action', { detail: { type: 'NAVIGATE', params: urlStore }}))
       } catch (e) {
-        document.dispatchEvent(new CustomEvent('action', { detail: { type: 'INIT' }}))
+        //document.dispatchEvent(new CustomEvent('action', { detail: { type: 'INIT' }}));
   }
 }
 
 
-// navigates to a page, updates 'mainNavFrom' and 'subNavFrom' properties in target URL
+// navigates to a page
 plasma.navigator = function (targetState) {
   var currentStore = Object.assign({}, this.store);
-  currentStore.mainNavFrom = currentStore.mainNav;
-  currentStore.subNavFrom = currentStore.subNav;
+
   if ((currentStore.mainNav != targetState.mainNav) || (currentStore.subNav != targetState.subNav) ){
     for (var i = 0; i < targetState.animPos.length; i++) {
       var backEl = document.querySelector('.'+targetState.animPos[i].animClass);
@@ -567,7 +560,8 @@ plasma.navigator = function (targetState) {
 
 // Event listener for actions
 document.addEventListener('action', function(e) {
-    //console.log('ACTION listener');
+    console.log('ACTION listener');
+    //console.log(e);
     this.store = this.appReducer(this.store, e.detail);
     if ( location.hash.slice(1) == encodeURIComponent(JSON.stringify(this.store))) {
       
@@ -579,9 +573,9 @@ document.addEventListener('action', function(e) {
 }.bind(plasma), false);
 
 // Event listener for router
-// Listen on hash change:
+// Listen on hash change (app already running):
 window.addEventListener('hashchange', plasma.router);
-// Listen on page load:
+// Listen on (initial) page load:
 window.addEventListener('load', plasma.router);
 
 

@@ -416,7 +416,7 @@ function test1() {
             }
             var mochaRunner =  mocha.run();
             mochaRunner.on('suite end', function(suite) {
-                console.log('suite end');
+                //console.log('suite end');
             });
         
            
@@ -427,7 +427,7 @@ function test1() {
 function test2 () {
     if (config.testingMode == true) {
         Timer.setTimeout(function(){
-            console.log('DOING TEST 2');
+            //console.log('DOING TEST 2');
             require("script!./../../../node_modules/mocha/mocha.js");
             var chai = require('chai');
             var expect = chai.expect;
@@ -439,14 +439,14 @@ function test2 () {
             	it("should return another value...", function () {
             		var color = 123;
             		var surf1 = document.querySelector('.famous-surface.card2')
-            		console.log(surf1);
+            		//console.log(surf1);
             		expect(color).is.not.empty;
             	});
             });
             
             var mochaRunner =  mocha.run();
             mochaRunner.on('suite end', function(suite) {
-                console.log('suite end');
+                //console.log('suite end');
             });
             
         }, 300)
