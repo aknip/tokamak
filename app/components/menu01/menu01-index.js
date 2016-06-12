@@ -229,8 +229,14 @@ function _createMainComponent() {
                   break;  
             }
         }
-    };  
-    
+    };
+
+    // Define components behavior for subnavigation
+    that.layoutCtrl.redraw = function (store) {
+        console.log('REDRAW menu01 page');
+        that.layoutCtrlListscroll.goToPage(store.subNav)
+    }
+
     // set initial layout as defined in function parameter
     that.layoutCtrl.setLayout(that.layoutCtrl.plasmaLayouts[devicename]);
     // register layout so that it can be updated later when screen size changes
@@ -361,24 +367,29 @@ function _createSubComponentListScroll() {
     
     
     that.layoutCtrlListscroll = new FlexScrollView({
-            dataSource: collection[0],
-            flow: true,    // smoothly animates renderables when changing the layout
-            layout: ListLayout,
-            direction: Utility.Direction.X, // set direction to horizontal
-            paginated: true,
-            touchMoveDirectionThreshold: 0.5,
-            useContainer: true, // wraps scrollview inside a ContainerSurface
-            debug: true,
-            mouseMove: true
-        })
-    
-    
+        dataSource: collection[0],
+        flow: true,    // smoothly animates renderables when changing the layout
+        layout: ListLayout,
+        direction: Utility.Direction.X, // set direction to horizontal
+        paginated: true,
+        touchMoveDirectionThreshold: 0.5,
+        useContainer: true, // wraps scrollview inside a ContainerSurface
+        debug: true,
+        mouseMove: true
+    });
+
+    that.updateAfterScrollend = Plasma.debounce(function(e) {
+        console.log('debounced..');
+        var newSubNav = {subNav: that.layoutCtrlListscroll.getCurrentIndex()};
+        document.dispatchEvent(new CustomEvent('action', { detail: { type: 'UPDATE-HASH', params: newSubNav }}))
+    }, 800);
+
     that.layoutCtrlListscroll.on('scrollend', function(event) {
-        //console.log('scrollend: ' + this.layoutCtrl.getCurrentIndex()) 
-        //var newSubNav = {subNav: swipeLayoutCtrl.getCurrentIndex()}; 
-        //document.dispatchEvent(new CustomEvent('action', { detail: { type: 'GOTO', params: newSubNav }}))
+        this.updateAfterScrollend();
+        //var newSubNav = {subNav: this.layoutCtrlListscroll.getCurrentIndex()};
+        //document.dispatchEvent(new CustomEvent('action', { detail: { type: 'UPDATE-HASH', params: newSubNav }}))
     }.bind(that));
-   
+
     
 }
 

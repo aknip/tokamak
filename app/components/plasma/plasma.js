@@ -333,6 +333,14 @@ let plasma = {
             data.controller.setLayoutOptions({animationPhase: 'TO'})
           }
         }
+
+        // Trigger subnavigation redraw (if available)
+        if (data.controller.redraw) {
+          data.controller.redraw(this.store)
+        }
+
+
+
       }
       else {
         // Hide with delay - look better and gives the layout the time to get the position of the DIV to animate from - before it goes away
@@ -449,6 +457,7 @@ plasma.initState = initState;
 plasma.history = [];
 plasma.linkClicked = true;
 plasma.backButtonClicked = false;
+plasma.noRedraw=false;
 
 // Now add methods: 
 // Reducer, see https://k94n.com/gordux-js-the-redux-pattern-in-vanilla-js
@@ -472,7 +481,8 @@ plasma.appReducer = function (state, action) {
         returnState = Object.assign({}, state, action.params);
         return returnState
         break;  
-      case 'GOTO':
+      case 'UPDATE-HASH':
+        this.noRedraw = true;
         returnState.subNav = action.params.subNav;  
         return returnState;
         break;
@@ -530,8 +540,13 @@ plasma.router = function (event) {
         if (backHistoryCompare == false) {
 
         }
-        //document.dispatchEvent(new CustomEvent('action', { detail: { type: 'SET-STATE', params: urlStore }}))
-        document.dispatchEvent(new CustomEvent('action', { detail: { type: 'NAVIGATE', params: urlStore }}))
+        if (plasma.noRedraw == false) {
+          document.dispatchEvent(new CustomEvent('action', {detail: {type: 'NAVIGATE', params: urlStore}}))
+        }
+        else {
+          console.log('RESET')
+          plasma.noRedraw = false
+        }
       } catch (e) {
         //document.dispatchEvent(new CustomEvent('action', { detail: { type: 'INIT' }}));
   }
@@ -563,13 +578,16 @@ document.addEventListener('action', function(e) {
     console.log('ACTION listener');
     //console.log(e);
     this.store = this.appReducer(this.store, e.detail);
-    if ( location.hash.slice(1) == encodeURIComponent(JSON.stringify(this.store))) {
-      
-    }else {
+
+    if (location.hash.slice(1) == encodeURIComponent(JSON.stringify(this.store))) {
+
+    } else {
       //console.log('HASH was updated');
-      location.hash=encodeURIComponent(JSON.stringify(this.store));
+      location.hash = encodeURIComponent(JSON.stringify(this.store));
     }
-    document.dispatchEvent(new CustomEvent('state'));
+    if (this.noRedraw == false) {
+      document.dispatchEvent(new CustomEvent('state'));
+    }
 }.bind(plasma), false);
 
 // Event listener for router

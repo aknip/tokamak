@@ -28,9 +28,9 @@ component.DEFAULT_OPTIONS = {
 
 component.prototype.redraw = function (store) {
     //TODO: only switch main nav if needed / main nav is different to current scroll state
-    this.layoutCtrl.setLayoutOptions({mainNav: store.mainNav});
-    this.startpage.layoutCtrl.goToPage(store.subNav);
-    this.menu01index.layoutCtrl.goToPage(store.subNav);
+    //this.layoutCtrl.setLayoutOptions({mainNav: store.mainNav});
+    //this.startpage.layoutCtrl.goToPage(store.subNav);
+    //this.menu01index.layoutCtrl.goToPage(store.subNav);
 }
 
 function _createComponent() {

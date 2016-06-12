@@ -48,8 +48,10 @@ Plasma.identifyDevice(); // initial device check
 // subscribe to state/store changes
 document.addEventListener('state', function (){
   console.log('STATE was updated / REDRAWING...');
-  
+
   Plasma.updateStatesInLayoutOptions(Plasma.store);
+
+
   //Plasma.animateLayouts();
   
   //console.log(Plasma.history);

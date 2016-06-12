@@ -40,6 +40,8 @@ component.DEFAULT_OPTIONS = {
                              // layout-options are updated => plasma.js line 292 
 };
 
+
+
 function _createMainComponent() {
     
     var that = this;
@@ -81,6 +83,12 @@ function _createMainComponent() {
             
         }
     };
+
+    // Define components behavior for subnavigation
+    that.layoutCtrl.redraw = function (store) {
+        console.log('REDRAW startpage');
+        that.layoutCtrlScroll.goToPage(store.subNav, false);
+    }
         
     // set initial layout as defined in function parameter
     that.layoutCtrl.setLayout(that.layoutCtrl.plasmaLayouts[devicename]);
@@ -177,7 +185,7 @@ function _createSubComponentScroll() {
         // or swiped again when already dragged up before (position = -100)
         if ((data.delta == 0) || (position.get() < -99)){
             if ((Plasma.store.mainNav != 'menu01') || (Plasma.store.subNav != 0) ){
-                Plasma.navigator({mainNav: 'menu01', subNav: 0, animPos: [{animClass: 'startTileBack0'}, {animClass: 'startTileFront0'}, {animClass: 'startTileHead0'}, {animClass: 'startTileDot0'}]})  
+                Plasma.navigator({mainNav: 'menu01', subNav: 1, animPos: [{animClass: 'startTileBack0'}, {animClass: 'startTileFront0'}, {animClass: 'startTileHead0'}, {animClass: 'startTileDot0'}]})
                 
                 test2();
             }
@@ -283,17 +291,17 @@ function _createSubComponentScroll() {
     
     
     that.layoutCtrlScroll = new FlexScrollView({
-            dataSource: collection[0],
-            flowOptions: {
-              reflowOnResize: false
-            },
-            direction: Utility.Direction.X, // set direction to horizontal
-            paginated: false,
-            touchMoveDirectionThreshold: 0.5,
-            useContainer: true, // wraps scrollview inside a ContainerSurface
-            debug: true,
-            mouseMove: true
-        })
+        dataSource: collection[0],
+        flowOptions: {
+          reflowOnResize: false
+        },
+        direction: Utility.Direction.X, // set direction to horizontal
+        paginated: false,
+        touchMoveDirectionThreshold: 0.5,
+        useContainer: true, // wraps scrollview inside a ContainerSurface
+        debug: true,
+        mouseMove: true
+    });
     
     that.layoutCtrlScroll.plasmaLayoutOptions = {};
     that.layoutCtrlScroll.plasmaID = that.options.plasmaID + 'Scroll';
@@ -324,18 +332,25 @@ function _createSubComponentScroll() {
         },
         phone: ListLayout
     };
-    
-    
+
+
     // set initial layout as defined in function parameter
     that.layoutCtrlScroll.setLayout(that.layoutCtrlScroll.plasmaLayouts[devicename]);
     // register layout so that it can be updated later when screen size changes
-    Plasma.registerLayout(that.layoutCtrlScroll.plasmaID, that.layoutCtrlScroll); 
-    
+    Plasma.registerLayout(that.layoutCtrlScroll.plasmaID, that.layoutCtrlScroll);
+
+    that.updateAfterScrollend = Plasma.debounce(function(e) {
+        console.log('debounced..');
+        var newSubNav = {subNav: that.layoutCtrlScroll.getCurrentIndex()};
+        document.dispatchEvent(new CustomEvent('action', { detail: { type: 'UPDATE-HASH', params: newSubNav }}))
+    }, 800);
+
+
     that.layoutCtrlScroll.on('scrollend', function(event) {
-        //console.log('scrollend: ' + this.layoutCtrlScroll.getCurrentIndex()) 
-        //var newSubNav = {subNav: this.layoutCtrlScroll.getCurrentIndex()}; 
-        //document.dispatchEvent(new CustomEvent('action', { detail: { type: 'GOTO', params: newSubNav }}))
-    }.bind(that)); 
+        that.updateAfterScrollend();
+        //var newSubNav = {subNav: this.layoutCtrlScroll.getCurrentIndex()};
+        //document.dispatchEvent(new CustomEvent('action', { detail: { type: 'UPDATE-HASH', params: newSubNav }}))
+    }.bind(that));
     
 }
 

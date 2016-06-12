@@ -79,6 +79,21 @@ var tmp1 = document.querySelectorAll('[style*="overflow: hidden"]');
 tmp1[0].style.overflow="visible"
 
 
+## URL / state concept
+
+// OLD:
+var initState = {mainNav: 'startpage', subNav: 0, animPos: []};
+
+// NEW:
+// green card shown, lifted up
+mainNav: 'startpage', subNav: 1, detail: [cardup: false, cardup: true], animPos: []
+
+// two detail cards shown, the first one clicked/full screen, the second one small at the bottom
+mainNav: 'menu01', subNav: 0, detail: [{content: 47, show: full}, {content: 12, show: small}], animPos: []
+
+
+
+
 ## git Notes
 git add --all
 git commit -m "first commit"
