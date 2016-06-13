@@ -1,4 +1,9 @@
 require('./startpage.css');
+// TEST FOR MATERIAL DESIGN LITE
+// Use original scss from node module:
+// require('material-design-lite/src/material-design-lite-grid.scss');
+// Use customized scss from app:
+// require('./../app/material-design-lite-grid.scss');
 
 var Engine = require('famous/core/Engine');
 var View = require('famous/core/View');

@@ -93,6 +93,16 @@ mainNav: 'menu01', subNav: 0, detail: [{content: 47, show: full}, {content: 12, 
 
 
 
+## Material Design Lite
+From startpage-index.js
+// TEST FOR MATERIAL DESIGN LITE
+// Use original scss from node module:
+require('material-design-lite/src/material-design-lite-grid.scss');
+// Use customized scss from app:
+require('./../app/material-design-lite-grid.scss');
+// important: configure webpack via 'includePaths' to support @import from path ./node_modules in .scss
+
+
 
 ## git Notes
 http://slides.com/alexandraulsh/build-your-own-website-with-cloud9-and-github-pages#/
@@ -141,3 +151,7 @@ git branch -d css
 
 # View available branches
 git branch
+
+
+Removed npm modules:
+"css-loader": "^0.23.1",

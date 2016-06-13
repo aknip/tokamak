@@ -40,11 +40,8 @@ if(TARGET === 'devserver' || TARGET === 'build' || TARGET === 'full-build') {
     module: {
       loaders: [
         {
-          // Test expects a RegExp! Note the slashes!
-          test: /\.css$/,
-          loaders: ['style', 'css'],
-          // Include accepts either a path or an array of paths.
-          include: PATHS.app
+          test: /\.scss|\.css$/,
+          loader: 'style!css!sass?includePaths[]=./node_modules/material-design-lite/src'
         }
       ]
   }
@@ -56,12 +53,12 @@ if( TARGET === 'testserver' ) {
     module: {
       loaders: [
          {
-              test: /(\.css|\.less)$/,
-              loader: 'null-loader',
-              exclude: [
-                  /build/
-              ]
-          },
+            test: /(\.css|\.less|\.scss)$/,
+            loader: 'null-loader',
+            exclude: [
+                /build/
+            ]
+          }
       ]
     }
   })
