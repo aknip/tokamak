@@ -95,6 +95,9 @@ mainNav: 'menu01', subNav: 0, detail: [{content: 47, show: full}, {content: 12, 
 
 
 ## git Notes
+http://slides.com/alexandraulsh/build-your-own-website-with-cloud9-and-github-pages#/
+https://github.com/blog/2019-how-to-undo-almost-anything-with-git
+
 git add --all
 git commit -m "first commit"
 git push origin master
@@ -107,8 +110,6 @@ Usage in terminal: git cmp "Long commit message goes here"
 git pull
 
 git status
-
-http://slides.com/alexandraulsh/build-your-own-website-with-cloud9-and-github-pages#/
 
 CREATE BRANCH:
 # Create a new branch
