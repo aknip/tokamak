@@ -94,13 +94,13 @@ mainNav: 'menu01', subNav: 0, detail: [{content: 47, show: full}, {content: 12, 
 
 
 ## Material Design Lite
-From startpage-index.js
-// TEST FOR MATERIAL DESIGN LITE
+Example from startpage-index.js
+important: configure webpack via 'includePaths' to support @import from path ./node_modules in .scss
+so only the modified .scss-files are in the app, the rest is imported from the original sources
 // Use original scss from node module:
 require('material-design-lite/src/material-design-lite-grid.scss');
 // Use customized scss from app:
 require('./../app/material-design-lite-grid.scss');
-// important: configure webpack via 'includePaths' to support @import from path ./node_modules in .scss
 
 
 
