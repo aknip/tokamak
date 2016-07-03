@@ -1,7 +1,7 @@
 
 var Engine = require('famous/core/Engine');
 
-var initState = {mainNav: 'startpage', subNav: 0, animPos: []};
+var initState = {mainNav: 'startpage', subNav: 0, animPos: [], localvar: {noredraw: false, linkclicked: false}};
 
 let plasma = {
   deviceBreakpoints: {
@@ -457,7 +457,6 @@ plasma.initState = initState;
 plasma.history = [];
 plasma.linkClicked = true;
 plasma.backButtonClicked = false;
-plasma.noRedraw=false;
 
 // Now add methods: 
 // Reducer, see https://k94n.com/gordux-js-the-redux-pattern-in-vanilla-js
@@ -479,11 +478,13 @@ plasma.appReducer = function (state, action) {
         //console.log(action.params);
         //this.history.push(state);
         returnState = Object.assign({}, state, action.params);
+        returnState.localvar.noredraw=false;
         return returnState
         break;  
       case 'UPDATE-HASH':
-        this.noRedraw = true;
-        returnState.subNav = action.params.subNav;  
+          console.log('UPDATE-HASH');
+        returnState.subNav = action.params.subNav;
+        returnState.localvar.noredraw=true;
         return returnState;
         break;
       case 'INIT':
@@ -502,27 +503,19 @@ plasma.appReducer = function (state, action) {
 
 // Router, see http://joakim.beng.se/blog/posts/a-javascript-router-in-20-lines.html
 plasma.router = function (event) {
-  // detect back button click
-  // works together with flag plasma.linkClicked which is always set in plasma.navigator()
-  if (plasma.linkClicked != true) {
-    //console.log('back button clicked!');
-    plasma.backButtonClicked = true;
-  }
-  else {
-    plasma.linkClicked = false;
-    plasma.backButtonClicked = false;
-  }
+
   // Current route url (getting rid of '#' in hash as well)
   // im empty # set default/initState
   var url = location.hash.slice(1) || encodeURIComponent(JSON.stringify(plasma.initState));
   var urlStore = {};
   var oldStore = {};
   console.log('HASH CHANGE!');
+
   var oldHash = event.oldURL || '';
   if (oldHash.indexOf('#') == -1 ) {
     // initial load, no referrer in URL
     //oldHash = encodeURIComponent(JSON.stringify(plasma.initState))
-    oldHash = url
+    oldHash = url;
   }
   else {
     oldHash = oldHash.split("#").pop();
@@ -530,24 +523,43 @@ plasma.router = function (event) {
   try {
         urlStore = JSON.parse(decodeURIComponent(url));
         oldStore = JSON.parse(decodeURIComponent(oldHash));
-        // Store last URL in history
-        plasma.history.push(oldStore);
-        // check if navigating back (pressing browser back-buuton)
-        var backHistoryStore = (plasma.history[plasma.history.length-2]);
-        var backHistoryCompare = (JSON.stringify(urlStore) == JSON.stringify(backHistoryStore));
+
+        // detect back button click
+        // works together with flag plasma.linkClicked which is always set in plasma.navigator()
+        if (plasma.linkClicked != true) {
+          console.log('back button clicked!');
+          plasma.backButtonClicked = true;
+          //urlStore.localvar.noredraw = false;
+          //urlStore = Object.assign({}, urlStore, {localvar: {noredraw: false}});
+          console.log(urlStore)
+        }
+        else {
+          plasma.linkClicked = false;
+          plasma.backButtonClicked = false;
+          // Store last URL in history
+          plasma.history.push(oldStore);
+          console.log('STORE HISTORY')
+        }
+
+
+        // check if navigating back (pressing browser back-button)
+        // var backHistoryStore = (plasma.history[plasma.history.length-2]);
+        // var backHistoryCompare = (JSON.stringify(urlStore) == JSON.stringify(backHistoryStore));
         // compare target url with pre-last history entry
         // only save last ...NavFrom if not navigating back (keep history URL untouched)
-        if (backHistoryCompare == false) {
-
-        }
-        if (plasma.noRedraw == false) {
+        //if (backHistoryCompare == false) {
+        //
+        // }
+        //if (plasma.noRedraw == false) {
+        if (urlStore.localvar.noredraw == false || (urlStore.localvar.noredraw == undefined)) {
           document.dispatchEvent(new CustomEvent('action', {detail: {type: 'NAVIGATE', params: urlStore}}))
         }
         else {
-          console.log('RESET')
-          plasma.noRedraw = false
+          console.log('RESET');
         }
+
       } catch (e) {
+        console.log('CATCH ROUTER ERROR');
         //document.dispatchEvent(new CustomEvent('action', { detail: { type: 'INIT' }}));
   }
 }
@@ -568,6 +580,7 @@ plasma.navigator = function (targetState) {
       targetState.animPos[i].device = this.currentDevice; // store current device to check later - in case of navigating back - if animation pos still valid
     }
     this.linkClicked = true;
+    currentStore.localvar.noredraw = false;
     location.hash = encodeURIComponent(JSON.stringify(Object.assign({}, currentStore, targetState)));
   }
 }
@@ -582,10 +595,10 @@ document.addEventListener('action', function(e) {
     if (location.hash.slice(1) == encodeURIComponent(JSON.stringify(this.store))) {
 
     } else {
-      //console.log('HASH was updated');
+      console.log('HASH was updated');
       location.hash = encodeURIComponent(JSON.stringify(this.store));
     }
-    if (this.noRedraw == false) {
+    if (this.store.localvar.noredraw == false || this.store.localvar.noredraw == undefined) {
       document.dispatchEvent(new CustomEvent('state'));
     }
 }.bind(plasma), false);

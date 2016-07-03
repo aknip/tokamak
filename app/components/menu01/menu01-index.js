@@ -381,7 +381,7 @@ function _createSubComponentListScroll() {
     that.updateAfterScrollend = Plasma.debounce(function(e) {
         console.log('debounced..');
         var newSubNav = {subNav: that.layoutCtrlListscroll.getCurrentIndex()};
-        document.dispatchEvent(new CustomEvent('action', { detail: { type: 'UPDATE-HASH', params: newSubNav }}))
+        //document.dispatchEvent(new CustomEvent('action', { detail: { type: 'UPDATE-HASH', params: newSubNav }}))
     }, 800);
 
     that.layoutCtrlListscroll.on('scrollend', function(event) {
