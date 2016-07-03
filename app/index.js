@@ -12,7 +12,7 @@ appCacheNanny.on('updateready', function() {
 */
 
 if (module.hot) {
-  module.hot.accept();
+  //module.hot.accept();
 }
 
 var Engine = require('famous/core/Engine');
@@ -47,19 +47,19 @@ Plasma.identifyDevice(); // initial device check
 
 // subscribe to state/store changes
 document.addEventListener('state', function (){
-  console.log('STATE was updated / REDRAWING...');
+  //console.log('STATE was updated / REDRAWING...');
 
   Plasma.updateStatesInLayoutOptions(Plasma.store);
 
 
   //Plasma.animateLayouts();
   
-  //console.log(Plasma.history);
+  ////console.log(Plasma.history);
   
   
   //TODO: sethash nur, wenn URL sich ändert / vorabprüfung
-  //console.log(location.hash.slice(1));
-  //console.log(Plasma.store);
+  ////console.log(location.hash.slice(1));
+  ////console.log(Plasma.store);
 });
 
 
@@ -89,8 +89,10 @@ renderController.show(appComponent);
 // adds a new node, we don't end up with duplicate nodes.
 if (module.hot) {
   module.hot.dispose(function() {
+    /*
     console.log('HOT');
     renderController.hide(appComponent);
+    */
     //myMenu.render = function(){ return null; }
   });
 }

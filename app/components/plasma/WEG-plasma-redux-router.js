@@ -45,7 +45,7 @@ PlasmaStore.router = function (event) {
   var url = location.hash.slice(1) || '/';
   var urlStore = {};
   var oldStore = {};
-  console.log('HASH CHANGE!');
+  //console.log('HASH CHANGE!');
   var oldHash = event.oldURL || '';
   if (oldHash.indexOf('#') == -1 ) {
     oldHash = encodeURIComponent(JSON.stringify(this.initState))
@@ -70,7 +70,7 @@ document.addEventListener('action', function(e) {
     if ( location.hash.slice(1) === encodeURIComponent(JSON.stringify(this.store))) {
       
     }else {
-      console.log('HASH was updated');
+      //console.log('HASH was updated');
       location.hash=encodeURIComponent(JSON.stringify(this.store));
     }
     Plasma.store = Object.assign({}, this.store);
@@ -98,7 +98,7 @@ function Component() {
         if ( location.hash.slice(1) === encodeURIComponent(JSON.stringify(this.store))) {
           
         }else {
-          console.log('HASH was updated');
+          //console.log('HASH was updated');
           location.hash=encodeURIComponent(JSON.stringify(this.store));
         }
         document.dispatchEvent(new CustomEvent('state'));
@@ -149,7 +149,7 @@ Component.prototype.router = function (event) {
   var url = location.hash.slice(1) || '/';
   var urlStore = {};
   var oldStore = {};
-  console.log('HASH CHANGE!');
+  //console.log('HASH CHANGE!');
   var oldHash = event.oldURL || '';
   if (oldHash.indexOf('#') == -1 ) {
     oldHash = encodeURIComponent(JSON.stringify(this.initState))

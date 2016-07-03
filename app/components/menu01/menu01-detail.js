@@ -17,7 +17,7 @@ component.prototype.constructor = component;
 
 component.DEFAULT_OPTIONS = {
     plasmaID: 'menu01detail',
-    mainNav: 'menu01'  
+    visibleForMainNav: 'menu01'  
 };
 
 
@@ -42,14 +42,14 @@ function _createMainComponent() {
     
     that.layoutCtrl.plasmaLayoutOptions = {};
     that.layoutCtrl.plasmaID = that.options.plasmaID;
-    that.layoutCtrl.mainNav = that.options.mainNav;
+    that.layoutCtrl.visibleForMainNav = that.options.visibleForMainNav;
 
     // Layouts are optimized for CSS performance:
     // No animation of size (slow) - instead use animation of scale, where target scale = 1
      that.layoutCtrl.plasmaLayouts = {
         phone: function (context, options) {
-            //console.log('layout menu01');
-            //console.log(options);
+            ////console.log('layout menu01');
+            ////console.log(options);
             switch (options.animationPhase) {
               case 'FROM':
                   context.set('detailBackground', {

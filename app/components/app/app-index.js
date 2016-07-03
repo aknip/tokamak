@@ -23,7 +23,7 @@ component.prototype.constructor = component;
 
 component.DEFAULT_OPTIONS = {
     plasmaID: 'mainApp',
-    mainNav: ''
+    visibleForMainNav: ''
 };
 
 component.prototype.redraw = function (store) {
@@ -79,7 +79,7 @@ function _createComponent() {
     that.layoutCtrl = new LayoutController({
         layoutOptions: {
             subNav: that.options.subNav,
-            mainNav: that.options.mainNav,
+            visibleForMainNav: that.options.visibleForMainNav,
             globalLayout: Plasma.globalLayout,
             mochaTestreportZoom: 0.25
         },
@@ -92,7 +92,7 @@ function _createComponent() {
     
     that.layoutCtrl.plasmaLayoutOptions = {};
     that.layoutCtrl.plasmaID = that.options.plasmaID;
-    that.layoutCtrl.mainNav = that.options.mainNav;
+    that.layoutCtrl.mainNav = that.options.visibleForMainNav;
     
     that.layoutCtrl.plasmaLayouts = {
         desktop: function (context, options) {

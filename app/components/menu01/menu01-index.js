@@ -20,7 +20,7 @@ component.prototype.constructor = component;
 
 component.DEFAULT_OPTIONS = {
     plasmaID: 'menu01',
-    mainNav: 'menu01'  
+    visibleForMainNav: 'menu01'  
 };
 
 
@@ -57,17 +57,17 @@ function _createMainComponent() {
     
     that.layoutCtrl.plasmaLayoutOptions = {};
     that.layoutCtrl.plasmaID = that.options.plasmaID;
-    that.layoutCtrl.mainNav = that.options.mainNav;
+    that.layoutCtrl.visibleForMainNav = that.options.visibleForMainNav;
 
     // Layouts are optimized for CSS performance:
     // No animation of size (slow) - instead use animation of scale, where target scale = 1
      that.layoutCtrl.plasmaLayouts = {
         phone: function (context, options) {
-            //console.log('layout menu01');
-            //console.log(options);
+            ////console.log('layout menu01');
+            ////console.log(options);
             switch (options.animationPhase) {
               case 'FROM':
-                  //console.log('FROM')
+                  ////console.log('FROM')
                   var pos0 = options.animPos[0];
                   var pos1 = options.animPos[1];
                   var pos2 = options.animPos[2];
@@ -233,7 +233,7 @@ function _createMainComponent() {
 
     // Define components behavior for subnavigation
     that.layoutCtrl.redraw = function (store) {
-        console.log('REDRAW menu01 page');
+        //console.log('REDRAW menu01 page');
         that.layoutCtrlListscroll.goToPage(store.subNav)
     }
 
@@ -379,7 +379,7 @@ function _createSubComponentListScroll() {
     });
 
     that.updateAfterScrollend = Plasma.debounce(function(e) {
-        console.log('debounced..');
+        //console.log('debounced..');
         var newSubNav = {subNav: that.layoutCtrlListscroll.getCurrentIndex()};
         //document.dispatchEvent(new CustomEvent('action', { detail: { type: 'UPDATE-HASH', params: newSubNav }}))
     }, 800);

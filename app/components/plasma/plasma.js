@@ -1,7 +1,7 @@
 
 var Engine = require('famous/core/Engine');
 
-var initState = {mainNav: 'startpage', subNav: 0, animPos: [], localvar: {noredraw: false, linkclicked: false}};
+var initState = {mainNav: 'startpage', subNav: 0, fromMainNav: 'startpage', fromSubNav: 0, animPos: [], redraw: true};
 
 let plasma = {
   deviceBreakpoints: {
@@ -85,7 +85,7 @@ let plasma = {
     var sY = screen.height;
     var sRes = parseInt(window.devicePixelRatio*100); // cut after 2nd comma position...
 
-    //console.log(sX + " / " + sY + " / " + sRes);
+    ////console.log(sX + " / " + sY + " / " + sRes);
 
     if ((sX == 360 && sY == 640) || (sX == 640 && sY == 360) && sRes == 300) {
         this.deviceName = 'Note3'
@@ -212,13 +212,13 @@ let plasma = {
   },
   animateLayouts: function() {
     //cycle through registered components
-    //console.log(this.registeredLayouts.menu01)
+    ////console.log(this.registeredLayouts.menu01)
     
     
   },
   animateLayoutsWEG: function() {
     //cycle through registered components
-    console.log(this.registeredLayouts.menu01)
+    //console.log(this.registeredLayouts.menu01)
     
     
     for (var i = 0; i < Object.keys(this.registeredLayouts).length; i++) {
@@ -230,7 +230,7 @@ let plasma = {
       data.controller.setLayout(data.controller.plasmaLayouts[data.deviceLayout]);
       
       
-      console.log('Check Anim');
+      //console.log('Check Anim');
 
       
       //
@@ -238,7 +238,7 @@ let plasma = {
       //
       if (data.controller.getLayoutOptions().animPos != undefined) {
         if (data.controller.getLayoutOptions().animPos[0] != undefined) {
-          //console.log('animPos bei Navigation gefunden!' + i);
+          ////console.log('animPos bei Navigation gefunden!' + i);
           data.controller.setLayoutOptions({animationPhase: 'FROM'});
           data.controller.resetFlowState();
           setTimeout(function () {
@@ -249,10 +249,10 @@ let plasma = {
       }
       /*
       if (data.controller.plasmaLayouts[data.deviceLayout].from != undefined) {
-        //console.log('from gefunden!');
+        ////console.log('from gefunden!');
         if (data.controller.getLayoutOptions().referenceDIVs != undefined) {
         //if (this.store.animPos[0].animClass == 'startTileBack0') {
-          //console.log('referenceDIVs gefunden!' + i);
+          ////console.log('referenceDIVs gefunden!' + i);
           data.controller.setLayout(data.controller.plasmaLayouts[data.deviceLayout].from);
           data.controller.resetFlowState();
           setTimeout(function () {
@@ -277,60 +277,76 @@ let plasma = {
   updateStatesInLayoutOptions: function(store) {
     //console.log('update states');
     //console.log(store);
+    //console.log(plasma.historyURLstate);
+    if (plasma.backButtonClicked == true) {
+        if (store.mainNav == plasma.historyURLstate.fromMainNav) {
+          console.log('update states: BACK BUTTON');
+        }
+        if (store.fromMainNav == plasma.historyURLstate.mainNav) {
+          console.log('update states: FORWARD BUTTON');
+        }
+    }
     
     // Copy state to layout options, including animation state (depending on state/URL)
     // cycle through registered components
     for (var i = 0; i < Object.keys(this.registeredLayouts).length; i++) {
       var data = {};
       data.controller = this.registeredLayouts[Object.keys(this.registeredLayouts)[i]];
-      // set animation option for current main navigation
-      //if (Object.keys(this.registeredLayouts)[i] == this.store.mainNav) {
-      if (data.controller.mainNav == this.store.mainNav) {  
+      
+      // Show all components which are  connected to the current Main Nav
+      // Set animation options for current main navigation
+      if (data.controller.visibleForMainNav == this.store.mainNav) {  
+        //console.log('show ID: ' + data.controller.id);
         // check if animation should be triggered
-        var backHistoryStore1 = (this.history[this.history.length-1]);
-        //var backHistoryStore2 = (this.history[this.history.length-2]);
-        //var backHistoryCompare = (JSON.stringify(store) == JSON.stringify(backHistoryStore2));
-        // compare target url with pre-last history entry
-        //if (backHistoryCompare == true) {
-        if (plasma.backButtonClicked == true) {  
-          //console.log('back button pressed');
-          if(backHistoryStore1.animPos && typeof backHistoryStore1.animPos[0] != 'undefined') {
-              console.log('animate back');
-              data.controllerFROM = this.registeredLayouts[backHistoryStore1.mainNav];
-              // set layout options
-              data.controller.setLayoutOptions(store);
-              data.controllerFROM.setLayoutOptions(backHistoryStore1);
-              // animate back
-              data.controllerFROM.setLayoutOptions({animationPhase: 'FROM', animationRuns: 'TRUE'}); // 'block' setting to 'HIDE' in else branch below
-              //data.controllerFROM.resetFlowState();
-              setTimeout(function () {
-                 this.controllerFROM.setLayoutOptions({animationPhase: 'HIDE', animationRuns: 'FALSE'}); // reset 'block'
-                 this.controllerFROM.resetFlowState();
-              }.bind(data), 200);
-              setTimeout(function () {
-                 this.controller.setLayoutOptions({animationPhase: 'TO'});
-                 //this.controller.resetFlowState();
-              }.bind(data), 20);
+        //var backHistoryStore1 = (this.history[this.history.length-1]);
+        var backHistoryStore1 = plasma.historyURLstate;
+        
+        if (plasma.backButtonClicked == true) {
+          //console.log('update states: backButtonClicked')
+          // Backwards navigation (back button)
+          if (backHistoryStore1 != undefined) {
+            if(backHistoryStore1.animPos && typeof backHistoryStore1.animPos[0] != undefined) {
+                //console.log('animate back');
+                data.controllerFROM = this.registeredLayouts[backHistoryStore1.mainNav];
+                // set layout options
+                data.controller.setLayoutOptions(store);
+                data.controllerFROM.setLayoutOptions(backHistoryStore1);
+                // animate back
+                data.controllerFROM.setLayoutOptions({animationPhase: 'FROM', animationRuns: 'TRUE'}); // 'block' setting to 'HIDE' in else branch below
+                //data.controllerFROM.resetFlowState();
+                setTimeout(function () {
+                   //console.log('hide ID: ' + this.controller.id);
+                   this.controllerFROM.setLayoutOptions({animationPhase: 'HIDE', animationRuns: 'FALSE'}); // reset 'block'
+                   this.controllerFROM.resetFlowState();
+                }.bind(data), 200);
+                setTimeout(function () {
+                   this.controller.setLayoutOptions({animationPhase: 'TO'});
+                   //this.controller.resetFlowState();
+                }.bind(data), 20);
+            }
+            else {
+              data.controller.setLayoutOptions({animationPhase: 'TO'});
+            }
           }
           else {
             data.controller.setLayoutOptions({animationPhase: 'TO'});
           }
         }
         else {
-          console.log('normal nav / no back button pressed');
-          // set layout options
+          // Forward navigation (default)
           data.controller.setLayoutOptions(store);
+          
           if(data.controller.getLayoutOptions().animPos && typeof data.controller.getLayoutOptions().animPos[0] != 'undefined') {
-              
+              //console.log('show ID: ' + data.controller.id + ' ...with animation');
               data.controller.setLayoutOptions({animationPhase: 'FROM'});
               data.controller.resetFlowState();
               setTimeout(function () {
                  this.controller.setLayoutOptions({animationPhase: 'TO'});
-                 //this.controller.getLayoutOptions().referenceDIVs = undefined;
               }.bind(data), 50);
           }
           else {
-            data.controller.setLayoutOptions({animationPhase: 'TO'})
+              
+              data.controller.setLayoutOptions({animationPhase: 'TO'})
           }
         }
 
@@ -342,17 +358,23 @@ let plasma = {
 
 
       }
+      // Hide components which are not connected to the current Main Nav
       else {
         // Hide with delay - look better and gives the layout the time to get the position of the DIV to animate from - before it goes away
         // First: Check if this is a controller which is blocked by 'animated back' (back button, see abover)
         if (data.controller.getLayoutOptions().animationRuns != 'TRUE') {
           setTimeout(function () {
+               //console.log('hide ID: ' + this.controller.id);
                this.controller.setLayoutOptions({animationPhase: 'HIDE'})
             }.bind(data), 20);
         }
       }
     }
+    // Reset backButtonClicked status
+    plasma.backButtonClicked = false;
   },
+  
+  
   calcGridPosSize: function(input) {
     // Example input: {x:0, y:0, width:6, height:1, screensize:[1000,800]}
     // get x-position (px) for frag-th column (frag raging form (0/grid) to (grid/grid) )
@@ -378,7 +400,7 @@ let plasma = {
       relFontsize = Math.round(relFontsize/2)*2;
       if (relFontsize<12) relFontsize=12;
       divs[i].style.fontSize = relFontsize+'px';
-      console.log(relFontsize);
+      //console.log(relFontsize);
     }
   },
   debounce: function (func, wait, immediate) {
@@ -420,16 +442,16 @@ let plasma = {
 // Maximum run of once per 200 milliseconds (see parameter in last line)
 plasma.updateLayout = plasma.debounce(function(e) {
   plasma.identifyDevice();
-  //console.log('device: ' + plasma.currentDevice);
+  ////console.log('device: ' + plasma.currentDevice);
 }, 200);
 
 plasma.resizeEnd = function(){
   // Haven't resized for 500ms!
-  console.log('Engine: resize end. Current device: ' + plasma.currentDevice + '/ '+ plasma.deviceName +  ', Prev. device: ' + plasma.previousDevice);
+  //console.log('Engine: resize end. Current device: ' + plasma.currentDevice + '/ '+ plasma.deviceName +  ', Prev. device: ' + plasma.previousDevice);
 
-  //console.log(plasma.registeredLayouts.navbar);
+  ////console.log(plasma.registeredLayouts.navbar);
   if (plasma.currentDevice != plasma.previousDevice) {
-    //console.log('layout change to: ' + plasma.currentDevice);
+    ////console.log('layout change to: ' + plasma.currentDevice);
     plasma.updateLayouts();
     plasma.previousDevice = plasma.currentDevice;
   }
@@ -446,6 +468,30 @@ Engine.on('resize', function() {
 });
 
 
+
+// navigates to a page
+plasma.navigator = function (targetState) {
+  var currentStore = Object.assign({}, this.store);
+
+  if ((currentStore.mainNav != targetState.mainNav) || (currentStore.subNav != targetState.subNav) ){
+    for (var i = 0; i < targetState.animPos.length; i++) {
+      var backEl = document.querySelector('.'+targetState.animPos[i].animClass);
+      var backEloldpos = backEl.getBoundingClientRect();
+      targetState.animPos[i].animX = backEloldpos.left;
+      targetState.animPos[i].animY = backEloldpos.top;
+      targetState.animPos[i].animW = backEloldpos.width;
+      targetState.animPos[i].animH = backEloldpos.height;
+      targetState.animPos[i].device = this.currentDevice; // store current device to check later - in case of navigating back - if animation pos still valid
+    }
+    targetState.fromMainNav=currentStore.mainNav;
+    targetState.fromSubNav=currentStore.subNav;
+    plasma.linkClicked = true;
+    location.hash = encodeURIComponent(JSON.stringify(Object.assign({}, currentStore, targetState)));
+    
+  }
+}
+
+
 //
 //
 // REDUX & ROUTER
@@ -457,6 +503,8 @@ plasma.initState = initState;
 plasma.history = [];
 plasma.linkClicked = true;
 plasma.backButtonClicked = false;
+plasma.historyURLstate = {};
+
 
 // Now add methods: 
 // Reducer, see https://k94n.com/gordux-js-the-redux-pattern-in-vanilla-js
@@ -474,21 +522,25 @@ plasma.appReducer = function (state, action) {
         //return action.params
         break;
       case 'NAVIGATE':
-        console.log('NAVIGATE!');
-        //console.log(action.params);
+        //console.log('NAVIGATE!');
+        ////console.log(action.params);
         //this.history.push(state);
         returnState = Object.assign({}, state, action.params);
-        returnState.localvar.noredraw=false;
+        returnState.redraw=true;
+        //returnState.fromMainNav=state.mainNav;
+        //returnState.fromSubNav=state.subNav;
+        //this.linkClicked = true;
         return returnState
         break;  
       case 'UPDATE-HASH':
-          console.log('UPDATE-HASH');
+          //console.log('UPDATE-HASH');
         returnState.subNav = action.params.subNav;
-        returnState.localvar.noredraw=true;
+        returnState.redraw=false;
+        this.linkClicked = true;
         return returnState;
         break;
       case 'INIT':
-        console.log('INIT!');
+        //console.log('INIT!');
         returnState = this.initState;
         return returnState
         break;    
@@ -503,102 +555,80 @@ plasma.appReducer = function (state, action) {
 
 // Router, see http://joakim.beng.se/blog/posts/a-javascript-router-in-20-lines.html
 plasma.router = function (event) {
-
-  // Current route url (getting rid of '#' in hash as well)
-  // im empty # set default/initState
-  var url = location.hash.slice(1) || encodeURIComponent(JSON.stringify(plasma.initState));
-  var urlStore = {};
-  var oldStore = {};
-  console.log('HASH CHANGE!');
-
-  var oldHash = event.oldURL || '';
-  if (oldHash.indexOf('#') == -1 ) {
-    // initial load, no referrer in URL
-    //oldHash = encodeURIComponent(JSON.stringify(plasma.initState))
-    oldHash = url;
-  }
-  else {
-    oldHash = oldHash.split("#").pop();
-  }
+  
+  // event.type == 'load' oder event.type == 'hashchange'
+  
+  //console.log('router:');
+  //console.log(event);
+  var url = location.hash.slice(1) ;
+  // if invalid URL/state (try/catch) redirect to default state (see 'catch'-part below)
   try {
-        urlStore = JSON.parse(decodeURIComponent(url));
-        oldStore = JSON.parse(decodeURIComponent(oldHash));
-
-        // detect back button click
-        // works together with flag plasma.linkClicked which is always set in plasma.navigator()
-        if (plasma.linkClicked != true) {
-          console.log('back button clicked!');
-          plasma.backButtonClicked = true;
-          //urlStore.localvar.noredraw = false;
-          //urlStore = Object.assign({}, urlStore, {localvar: {noredraw: false}});
-          console.log(urlStore)
-        }
-        else {
-          plasma.linkClicked = false;
-          plasma.backButtonClicked = false;
-          // Store last URL in history
-          plasma.history.push(oldStore);
-          console.log('STORE HISTORY')
-        }
-
-
-        // check if navigating back (pressing browser back-button)
-        // var backHistoryStore = (plasma.history[plasma.history.length-2]);
-        // var backHistoryCompare = (JSON.stringify(urlStore) == JSON.stringify(backHistoryStore));
-        // compare target url with pre-last history entry
-        // only save last ...NavFrom if not navigating back (keep history URL untouched)
-        //if (backHistoryCompare == false) {
-        //
-        // }
-        //if (plasma.noRedraw == false) {
-        if (urlStore.localvar.noredraw == false || (urlStore.localvar.noredraw == undefined)) {
-          document.dispatchEvent(new CustomEvent('action', {detail: {type: 'NAVIGATE', params: urlStore}}))
-        }
-        else {
-          console.log('RESET');
-        }
-
-      } catch (e) {
-        console.log('CATCH ROUTER ERROR');
-        //document.dispatchEvent(new CustomEvent('action', { detail: { type: 'INIT' }}));
-  }
-}
-
-
-// navigates to a page
-plasma.navigator = function (targetState) {
-  var currentStore = Object.assign({}, this.store);
-
-  if ((currentStore.mainNav != targetState.mainNav) || (currentStore.subNav != targetState.subNav) ){
-    for (var i = 0; i < targetState.animPos.length; i++) {
-      var backEl = document.querySelector('.'+targetState.animPos[i].animClass);
-      var backEloldpos = backEl.getBoundingClientRect();
-      targetState.animPos[i].animX = backEloldpos.left;
-      targetState.animPos[i].animY = backEloldpos.top;
-      targetState.animPos[i].animW = backEloldpos.width;
-      targetState.animPos[i].animH = backEloldpos.height;
-      targetState.animPos[i].device = this.currentDevice; // store current device to check later - in case of navigating back - if animation pos still valid
+    var urlStore = JSON.parse(decodeURIComponent(url));
+   
+    var oldHash = event.oldURL || '';
+    if (oldHash.indexOf('#') == -1 ) {
+      // initial load, no referrer in URL
+      //oldHash = encodeURIComponent(JSON.stringify(plasma.initState))
+      oldHash = url;
     }
-    this.linkClicked = true;
-    currentStore.localvar.noredraw = false;
-    location.hash = encodeURIComponent(JSON.stringify(Object.assign({}, currentStore, targetState)));
+    else {
+      oldHash = oldHash.split("#").pop();
+    }
+    var oldStore = JSON.parse(decodeURIComponent(oldHash));
+    plasma.historyURLstate = oldStore;
+
+    // detect back button click
+    // works together with flag plasma.linkClicked which is always set in plasma.navigator()
+    if (plasma.linkClicked != true) {
+      // back button
+      plasma.backButtonClicked = true;
+      //console.log('back button detected');
+      plasma.history.push(oldStore);
+    }
+    else {
+      // normal link
+      plasma.linkClicked = false;
+      plasma.backButtonClicked = false;
+      if (url != oldHash) {
+        // Store last URL in history (if different)
+        plasma.history.push(oldStore);
+        console.log('STORE HISTORY');
+        //console.log(plasma.history);
+      }
+    }
+    if (urlStore.redraw == true || (urlStore.redraw == undefined)) {
+      //console.log('navigate:');
+      document.dispatchEvent(new CustomEvent('action', {detail: {type: 'NAVIGATE', params: urlStore}}));
+      plasma.linkClicked = false;
+    }
+    else {
+      //console.log('RESET');
+    }
+  
+        
+  } 
+  catch (e) {
+    // if invalid URL/state (try/catch) redirect to default state
+    //console.log('INVALID URL');
+    location.hash = encodeURIComponent(JSON.stringify(plasma.initState))
   }
+
 }
 
 
 // Event listener for actions
 document.addEventListener('action', function(e) {
-    console.log('ACTION listener');
+    //console.log('ACTION listener');
     //console.log(e);
     this.store = this.appReducer(this.store, e.detail);
 
     if (location.hash.slice(1) == encodeURIComponent(JSON.stringify(this.store))) {
 
     } else {
-      console.log('HASH was updated');
+      //console.log('HASH was updated');
       location.hash = encodeURIComponent(JSON.stringify(this.store));
     }
-    if (this.store.localvar.noredraw == false || this.store.localvar.noredraw == undefined) {
+    if (this.store.redraw == true || this.store.redraw == undefined) {
       document.dispatchEvent(new CustomEvent('state'));
     }
 }.bind(plasma), false);
@@ -608,6 +638,7 @@ document.addEventListener('action', function(e) {
 window.addEventListener('hashchange', plasma.router);
 // Listen on (initial) page load:
 window.addEventListener('load', plasma.router);
+
 
 
 module.exports = plasma;

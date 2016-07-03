@@ -41,7 +41,7 @@ component.prototype.constructor = component;
 
 component.DEFAULT_OPTIONS = {
     plasmaID: 'startpage',   // internal ID
-    mainNav: 'startpage'     // determines on which mainNav (URL/store) 
+    visibleForMainNav: 'startpage'     // determines on which mainNav (URL/store) 
                              // layout-options are updated => plasma.js line 292 
 };
 
@@ -64,7 +64,7 @@ function _createMainComponent() {
     
     that.layoutCtrl.plasmaLayoutOptions = {};
     that.layoutCtrl.plasmaID = that.options.plasmaID;
-    that.layoutCtrl.mainNav = that.options.mainNav;
+    that.layoutCtrl.visibleForMainNav = that.options.visibleForMainNav;
     
     that.layoutCtrl.plasmaLayouts = {
         phone: function (context, options) {
@@ -91,7 +91,7 @@ function _createMainComponent() {
 
     // Define components behavior for subnavigation
     that.layoutCtrl.redraw = function (store) {
-        console.log('REDRAW startpage');
+        //console.log('REDRAW startpage');
         that.layoutCtrlScroll.goToPage(store.subNav, false);
     }
         
@@ -200,7 +200,7 @@ function _createSubComponentScroll() {
             var velocity = data.velocity;
             var endPos = 0;
             var blockFlow = false;
-            //console.log(data);
+            ////console.log(data);
             if (currentPosition < -20 && velocity < 0) {
                 if (currentPosition < -110) {
                     endPos = currentPosition;
@@ -243,7 +243,7 @@ function _createSubComponentScroll() {
         //if((positionActive==true) || ((positionActive==false) && (positionValue!=0))) {
         if(positionOLD != positionValue){
             // Do Animation only if tranitionable is animating or has specific value (caused by drag action): see above "sync.on('update'..."
-            //console.log(positionValue);
+            ////console.log(positionValue);
             collection[0][0].setLayoutOptions({dragY: positionValue});
             //if (positionValue > -120) {
             if (collection[0][0].getLayoutOptions().blockFlow == true ) {    
@@ -310,7 +310,7 @@ function _createSubComponentScroll() {
     
     that.layoutCtrlScroll.plasmaLayoutOptions = {};
     that.layoutCtrlScroll.plasmaID = that.options.plasmaID + 'Scroll';
-    that.layoutCtrlScroll.mainNav = that.options.mainNav;
+    that.layoutCtrlScroll.visibleForMainNav = that.options.visibleForMainNav;
     
     that.layoutCtrlScroll.plasmaLayouts = {
         desktop: function (context, options) {
@@ -345,7 +345,7 @@ function _createSubComponentScroll() {
     Plasma.registerLayout(that.layoutCtrlScroll.plasmaID, that.layoutCtrlScroll);
 
     that.updateAfterScrollend = Plasma.debounce(function(e) {
-        console.log('debounced..');
+        //console.log('Change URL state after scroll // debounced..');
         var newSubNav = {subNav: that.layoutCtrlScroll.getCurrentIndex()};
         document.dispatchEvent(new CustomEvent('action', { detail: { type: 'UPDATE-HASH', params: newSubNav }}))
     }, 800);
@@ -369,7 +369,7 @@ function _clickOnTile(clickedObj) {
         
         // get absolute pos of renderable
         // https://github.com/IjzerenHein/famous-flex/issues/48
-        //console.log(that.layoutCtrlScroll.getSpec(that.layoutCtrlScroll.get(0), true).transform);
+        ////console.log(that.layoutCtrlScroll.getSpec(that.layoutCtrlScroll.get(0), true).transform);
         
         Plasma.navigator({mainNav: 'menu01', subNav: 0, animPos: [{animClass: clickedObj}]})  
     };
@@ -381,10 +381,10 @@ function _clickOnTile1(el) {
    
     var clickedObj = parseInt(el.srcElement.className.split("Front").pop());
     
-    console.log('click on item');
+    //console.log('click on item');
     // get absolute pos of renderable
     // https://github.com/IjzerenHein/famous-flex/issues/48
-    //console.log(this.layoutCtrlScroll.getSpec(this.layoutCtrlScroll.get(0), true).transform);
+    ////console.log(this.layoutCtrlScroll.getSpec(this.layoutCtrlScroll.get(0), true).transform);
     
     Plasma.navigator({mainNav: 'menu01', subNav: 0, animPos: [{animClass: 'startTileBack'+clickedObj}]})   
     
@@ -436,7 +436,7 @@ function test1() {
             }
             var mochaRunner =  mocha.run();
             mochaRunner.on('suite end', function(suite) {
-                //console.log('suite end');
+                ////console.log('suite end');
             });
         
            
@@ -447,7 +447,7 @@ function test1() {
 function test2 () {
     if (config.testingMode == true) {
         Timer.setTimeout(function(){
-            //console.log('DOING TEST 2');
+            ////console.log('DOING TEST 2');
             require("script!./../../../node_modules/mocha/mocha.js");
             var chai = require('chai');
             var expect = chai.expect;
@@ -459,14 +459,14 @@ function test2 () {
             	it("should return another value...", function () {
             		var color = 123;
             		var surf1 = document.querySelector('.famous-surface.card2')
-            		//console.log(surf1);
+            		////console.log(surf1);
             		expect(color).is.not.empty;
             	});
             });
             
             var mochaRunner =  mocha.run();
             mochaRunner.on('suite end', function(suite) {
-                //console.log('suite end');
+                ////console.log('suite end');
             });
             
         }, 300)

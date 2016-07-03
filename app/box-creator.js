@@ -11,9 +11,9 @@ sideEffectNode.setAttribute('style', 'background-color: lightblue; padding: 20px
 sideEffectNode.textContent = 'Side Effect v7.2!';
 document.body.appendChild(sideEffectNode);
 
-console.log('logged always');
+//console.log('logged always');
 if (config.loggingMode == true) {
-  console.log('logged only in dev mode');
+  //console.log('logged only in dev mode');
 }
 
 // Remove the most recently-added <div> so that when the code runs again and
