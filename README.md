@@ -12,6 +12,8 @@ changed in ws
 
 
 ## Install
+- Make sure you have Node 5.9.0
+- Make sure webpack is installed (npm install webpack -g)
 - npm install
 - npm run start
 - open URL reported to terminal in webbrowser
@@ -34,6 +36,39 @@ Does NOT WORK with https addresses (eg. cloud 9 default preview).
 > npm run build
 
 <dl><br><br></dl>
+
+
+## URL / state concept
+
+- Overall concept:
+  - ALL GUI-changes, navigations etc. are triggered by URL-changes (href, location.hash)
+  - URL change is recognized by the plasma.router and 'NAVIGATE'-action is dispatched
+  - This means: Dataflow is unidirectinal: From URL to state. State is never set directly (for navigation purposes)
+- Example 1: Click on item
+  - Set location.hash, , with redraw: true
+  - plasma.router is called
+  - 'NAVIGATION'-action is dispatched, state set
+- Example 2: Swipe through scroll list
+  - Set location.hash, with redraw: false
+  - plasma.router is called
+  - NO action is dispatched, because the goal is just to reflect the UI change in the URL
+- Example 3: Initial call by deep link
+  - URL is set in browser, eg. via link or bookmark or manual entry
+  - plasma.router is called
+  - router checks, if valid hash # is available. If not, hash will be set with default state (start page)
+  - 'NAVIGATION'-action is dispatched, state set
+
+
+NEW:
+// green card shown, lifted up
+mainNav: 'startpage', subNav: 1, detail: [cardup: false, cardup: true], animPos: []
+
+// two detail cards shown, the first one clicked/full screen, the second one small at the bottom
+mainNav: 'menu01', subNav: 0, detail: [{content: 47, show: full}, {content: 12, show: small}], animPos: []
+
+
+<dl><br><br></dl>
+
 
 ## Animation notes
 - Use 'scale' to animate the size of a surface over time, don't use 'size' ! http://famous.org/learn/sizing.html
@@ -78,18 +113,6 @@ clickedObj.setLayout(detailview-layout);
 var tmp1 = document.querySelectorAll('[style*="overflow: hidden"]');
 tmp1[0].style.overflow="visible"
 
-
-## URL / state concept
-
-// OLD:
-var initState = {mainNav: 'startpage', subNav: 0, animPos: []};
-
-// NEW:
-// green card shown, lifted up
-mainNav: 'startpage', subNav: 1, detail: [cardup: false, cardup: true], animPos: []
-
-// two detail cards shown, the first one clicked/full screen, the second one small at the bottom
-mainNav: 'menu01', subNav: 0, detail: [{content: 47, show: full}, {content: 12, show: small}], animPos: []
 
 
 
@@ -155,3 +178,43 @@ git branch
 
 Removed npm modules:
 "css-loader": "^0.23.1",
+
+
+
+
+
+
+
+          ┌───────────────────────┐
+          │                       │
+          │                       │
+          │     ┌────┐            │
+          │     │TEST│            │
+          │     └────┘            │
+          │                       │
+          │                       │           ┌────────────────┐
+          │                       │           │                │
+          └───────────────────────┘           │                │▒▒
+                      │                       │                │▒▒
+                      │                       │                │▒▒
+                      │                       │                │▒▒
+                      ▼                       │                │▒▒
+                     ╱ ╲                      │                │▒▒
+                    ╱   ╲                     └────────────────┘▒▒
+                   ╱     ╲                      ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+                  ╱       ╲                     ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+                 ╱         ╲
+                ▕           ▏
+                 ╲         ╱
+                  ╲       ╱
+                   ╲     ╱
+                    ╲   ╱
+                     ╲ ╱
+                      V
+
+
+Next steps:
+- Enhance URL-state with 3rd level: SubNav2
+- Check Click-Trigger on startpage (188: sync.on('end'...)
+- Refactor Scroll-Nav: Set hash, BACK/FFWD-Buttons...
+- Reformat README.md

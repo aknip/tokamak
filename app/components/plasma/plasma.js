@@ -1,7 +1,7 @@
 
 var Engine = require('famous/core/Engine');
 
-var initState = {mainNav: 'startpage', subNav: 0, fromMainNav: 'startpage', fromSubNav: 0, animPos: [], redraw: true};
+var initState = {nav1: 'startpage', nav2: 0, nav3: 0, fromnav1: 'startpage', fromnav2: 0, fromNav3: 0, animPos: [], redraw: true};
 
 let plasma = {
   deviceBreakpoints: {
@@ -277,15 +277,6 @@ let plasma = {
   updateStatesInLayoutOptions: function(store) {
     //console.log('update states');
     //console.log(store);
-    //console.log(plasma.historyURLstate);
-    if (plasma.backButtonClicked == true) {
-        if (store.mainNav == plasma.historyURLstate.fromMainNav) {
-          console.log('update states: BACK BUTTON');
-        }
-        if (store.fromMainNav == plasma.historyURLstate.mainNav) {
-          console.log('update states: FORWARD BUTTON');
-        }
-    }
     
     // Copy state to layout options, including animation state (depending on state/URL)
     // cycle through registered components
@@ -295,22 +286,19 @@ let plasma = {
       
       // Show all components which are  connected to the current Main Nav
       // Set animation options for current main navigation
-      if (data.controller.visibleForMainNav == this.store.mainNav) {  
-        //console.log('show ID: ' + data.controller.id);
+      if (data.controller.visibleForMainNav == this.store.nav1) {
+        // console.log('show ID: ' + data.controller.id);
         // check if animation should be triggered
-        //var backHistoryStore1 = (this.history[this.history.length-1]);
-        var backHistoryStore1 = plasma.historyURLstate;
-        
-        if (plasma.backButtonClicked == true) {
-          //console.log('update states: backButtonClicked')
-          // Backwards navigation (back button)
-          if (backHistoryStore1 != undefined) {
-            if(backHistoryStore1.animPos && typeof backHistoryStore1.animPos[0] != undefined) {
+        if (plasma.browserNavButtonClicked == "back") {
+          // console.log('update states: BrowserNavBackButton clicked')
+          // Navigation by Browser-Nav-Backward-Button 
+          if (plasma.lastStore != undefined) {
+            if(plasma.lastStore.animPos && typeof plasma.lastStore.animPos[0] != undefined) {
                 //console.log('animate back');
-                data.controllerFROM = this.registeredLayouts[backHistoryStore1.mainNav];
+                data.controllerFROM = this.registeredLayouts[plasma.lastStore.nav1];
                 // set layout options
                 data.controller.setLayoutOptions(store);
-                data.controllerFROM.setLayoutOptions(backHistoryStore1);
+                data.controllerFROM.setLayoutOptions(plasma.lastStore);
                 // animate back
                 data.controllerFROM.setLayoutOptions({animationPhase: 'FROM', animationRuns: 'TRUE'}); // 'block' setting to 'HIDE' in else branch below
                 //data.controllerFROM.resetFlowState();
@@ -325,15 +313,17 @@ let plasma = {
                 }.bind(data), 20);
             }
             else {
+              // animPos undefined - transition to final layout ('TO')
               data.controller.setLayoutOptions({animationPhase: 'TO'});
             }
           }
           else {
+            // plasma.lastStore (referrer URL) undefined - transition to final layout ('TO')
             data.controller.setLayoutOptions({animationPhase: 'TO'});
           }
         }
         else {
-          // Forward navigation (default)
+          // Navigation by link or Browser-Nav-Forward-Button / plasma.browserNavButtonClicked == "no" or "forward"
           data.controller.setLayoutOptions(store);
           
           if(data.controller.getLayoutOptions().animPos && typeof data.controller.getLayoutOptions().animPos[0] != 'undefined') {
@@ -345,7 +335,6 @@ let plasma = {
               }.bind(data), 50);
           }
           else {
-              
               data.controller.setLayoutOptions({animationPhase: 'TO'})
           }
         }
@@ -370,8 +359,8 @@ let plasma = {
         }
       }
     }
-    // Reset backButtonClicked status
-    plasma.backButtonClicked = false;
+    // Reset BrowserNavButton-Clicked status
+    plasma.browserNavButtonClicked = "no";
   },
   
   
@@ -473,7 +462,7 @@ Engine.on('resize', function() {
 plasma.navigator = function (targetState) {
   var currentStore = Object.assign({}, this.store);
 
-  if ((currentStore.mainNav != targetState.mainNav) || (currentStore.subNav != targetState.subNav) ){
+  if ((currentStore.nav1 != targetState.nav1) || (currentStore.nav2 != targetState.nav2) ){
     for (var i = 0; i < targetState.animPos.length; i++) {
       var backEl = document.querySelector('.'+targetState.animPos[i].animClass);
       var backEloldpos = backEl.getBoundingClientRect();
@@ -483,8 +472,8 @@ plasma.navigator = function (targetState) {
       targetState.animPos[i].animH = backEloldpos.height;
       targetState.animPos[i].device = this.currentDevice; // store current device to check later - in case of navigating back - if animation pos still valid
     }
-    targetState.fromMainNav=currentStore.mainNav;
-    targetState.fromSubNav=currentStore.subNav;
+    targetState.fromNav1=currentStore.nav1;
+    targetState.fromNav2=currentStore.nav2;
     plasma.linkClicked = true;
     location.hash = encodeURIComponent(JSON.stringify(Object.assign({}, currentStore, targetState)));
     
@@ -502,8 +491,8 @@ plasma.store = initState;
 plasma.initState = initState;
 plasma.history = [];
 plasma.linkClicked = true;
-plasma.backButtonClicked = false;
-plasma.historyURLstate = {};
+plasma.browserNavButtonClicked = "no";
+plasma.lastStore = {};
 
 
 // Now add methods: 
@@ -511,14 +500,14 @@ plasma.historyURLstate = {};
 plasma.appReducer = function (state, action) {
   var returnState = Object.assign({}, state); // clone object in an immutable way / alternatively: destructuring assignment returnState = {...state, something: 'some other value'} 
   if (typeof returnState === 'undefined') {
-    returnState = this.initState
+    returnState = this.initState;
     return returnState
   }
   else {
     switch (action.type) {
       case 'SET-STATE':
         returnState = Object.assign({}, state, action.params);
-        return returnState
+        return returnState;
         //return action.params
         break;
       case 'NAVIGATE':
@@ -527,14 +516,14 @@ plasma.appReducer = function (state, action) {
         //this.history.push(state);
         returnState = Object.assign({}, state, action.params);
         returnState.redraw=true;
-        //returnState.fromMainNav=state.mainNav;
-        //returnState.fromSubNav=state.subNav;
+        //returnState.fromNav1=state.nav1;
+        //returnState.fromNav2=state.nav2;
         //this.linkClicked = true;
-        return returnState
+        return returnState;
         break;  
       case 'UPDATE-HASH':
           //console.log('UPDATE-HASH');
-        returnState.subNav = action.params.subNav;
+        returnState.nav2 = action.params.nav2;
         returnState.redraw=false;
         this.linkClicked = true;
         return returnState;
@@ -542,7 +531,7 @@ plasma.appReducer = function (state, action) {
       case 'INIT':
         //console.log('INIT!');
         returnState = this.initState;
-        return returnState
+        return returnState;
         break;    
       default:
         returnState = this.initState;
@@ -550,16 +539,15 @@ plasma.appReducer = function (state, action) {
     }
     
   }
-}
+};
 
 
 // Router, see http://joakim.beng.se/blog/posts/a-javascript-router-in-20-lines.html
 plasma.router = function (event) {
-  
-  // event.type == 'load' oder event.type == 'hashchange'
-  
+
   //console.log('router:');
   //console.log(event);
+
   var url = location.hash.slice(1) ;
   // if invalid URL/state (try/catch) redirect to default state (see 'catch'-part below)
   try {
@@ -568,27 +556,33 @@ plasma.router = function (event) {
     var oldHash = event.oldURL || '';
     if (oldHash.indexOf('#') == -1 ) {
       // initial load, no referrer in URL
-      //oldHash = encodeURIComponent(JSON.stringify(plasma.initState))
+      // oldHash = encodeURIComponent(JSON.stringify(plasma.initState))
       oldHash = url;
     }
     else {
       oldHash = oldHash.split("#").pop();
     }
     var oldStore = JSON.parse(decodeURIComponent(oldHash));
-    plasma.historyURLstate = oldStore;
+    plasma.lastStore = oldStore;
 
-    // detect back button click
+    // detect back/ffwd button click
     // works together with flag plasma.linkClicked which is always set in plasma.navigator()
     if (plasma.linkClicked != true) {
-      // back button
-      plasma.backButtonClicked = true;
-      //console.log('back button detected');
+      if ((urlStore.nav1 == oldStore.fromNav1) && (urlStore.nav2 == oldStore.fromNav2) && (urlStore.nav3 == oldStore.fromNav3)) {
+        console.log('router: BACK BUTTON');
+        plasma.browserNavButtonClicked = "back";
+      }
+      if ((urlStore.fromNav1 == oldStore.nav1) && (urlStore.fromNav2 == oldStore.nav2) && (urlStore.fromNav3 == oldStore.nav3)) {
+        console.log('router: FORWARD BUTTON');
+        plasma.browserNavButtonClicked = "forward";
+      }
+      //console.log('back/ffwd button detected');
       plasma.history.push(oldStore);
     }
     else {
       // normal link
       plasma.linkClicked = false;
-      plasma.backButtonClicked = false;
+      plasma.browserNavButtonClicked = "no";
       if (url != oldHash) {
         // Store last URL in history (if different)
         plasma.history.push(oldStore);

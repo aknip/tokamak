@@ -20,7 +20,7 @@ component.prototype.constructor = component;
 
 component.DEFAULT_OPTIONS = {
     plasmaID: 'menu01',
-    visibleForMainNav: 'menu01'  
+    visibleForMainNav: 'menu01'
 };
 
 
@@ -234,7 +234,7 @@ function _createMainComponent() {
     // Define components behavior for subnavigation
     that.layoutCtrl.redraw = function (store) {
         //console.log('REDRAW menu01 page');
-        that.layoutCtrlListscroll.goToPage(store.subNav)
+        that.layoutCtrlListscroll.goToPage(store.nav2)
     }
 
     // set initial layout as defined in function parameter
@@ -290,11 +290,11 @@ function _createSubComponentListScroll() {
             var cardSurface = new Surface({content: that.options.name + ' / ' + config.name + ', Nr. '+i + '<br>Link to: ' + ((i%2==0) ? 'MAIN' : 'MENU 01'), classes: ['card'+i]});
             cardSurface.on('click', function(el){
                 if (this%2==0) {
-                    Plasma.navigator({mainNav: 'startpage', subNav: 0, animPos: []})
+                    Plasma.navigator({nav1: 'startpage', nav2: 0, animPos: []})
     
                 }
                 else {
-                    Plasma.navigator({mainNav: 'menu01', subNav: 0, animPos: []})
+                    Plasma.navigator({nav1: 'menu01', nav2: 0, animPos: []})
                 }
             }.bind(i));
             var layoutCtrlA = new LayoutController({
@@ -380,13 +380,13 @@ function _createSubComponentListScroll() {
 
     that.updateAfterScrollend = Plasma.debounce(function(e) {
         //console.log('debounced..');
-        var newSubNav = {subNav: that.layoutCtrlListscroll.getCurrentIndex()};
+        var newSubNav = {nav2: that.layoutCtrlListscroll.getCurrentIndex()};
         //document.dispatchEvent(new CustomEvent('action', { detail: { type: 'UPDATE-HASH', params: newSubNav }}))
     }, 800);
 
     that.layoutCtrlListscroll.on('scrollend', function(event) {
         this.updateAfterScrollend();
-        //var newSubNav = {subNav: this.layoutCtrlListscroll.getCurrentIndex()};
+        //var newSubNav = {nav2: this.layoutCtrlListscroll.getCurrentIndex()};
         //document.dispatchEvent(new CustomEvent('action', { detail: { type: 'UPDATE-HASH', params: newSubNav }}))
     }.bind(that));
 

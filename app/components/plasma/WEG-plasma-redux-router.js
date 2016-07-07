@@ -1,6 +1,6 @@
 var Plasma = require('./plasma');
-//var initState = {mainNav: 0, subNav: 0, mainNavFrom: 0, subNavFrom: 0, divs: {menu0:{div1: ''}, menu1:{div1: '', div2: ''}}};
-var initState = {mainNav: 0, subNav: 0, mainNavFrom: 0, subNavFrom: 0, menu0: [{class: 'classA', posX: 2}, {class: 'classB', posX: 99}]};
+//var initState = {nav1: 0, nav2: 0, mainNavFrom: 0, subNavFrom: 0, divs: {menu0:{div1: ''}, menu1:{div1: '', div2: ''}}};
+var initState = {nav1: 0, nav2: 0, mainNavFrom: 0, subNavFrom: 0, menu0: [{class: 'classA', posX: 2}, {class: 'classB', posX: 99}]};
 
 let PlasmaStore = {
   store: initState,
@@ -23,7 +23,7 @@ PlasmaStore.appReducer = function (state, action) {
         //return action.params
         break;
       case 'GOTO':
-        returnState.subNav = action.params.subNav;  
+        returnState.nav2 = action.params.nav2;
         return returnState;
         break;
       case 'INIT':
@@ -56,8 +56,8 @@ PlasmaStore.router = function (event) {
   try {
         urlStore = JSON.parse(decodeURIComponent(url));
         oldStore = JSON.parse(decodeURIComponent(oldHash));
-        urlStore.mainNavFrom = oldStore.mainNav;
-        urlStore.subNavFrom = oldStore.subNav;
+        urlStore.nav1From = oldStore.nav1;
+        urlStore.nav2From = oldStore.nav2;
         document.dispatchEvent(new CustomEvent('action', { detail: { type: 'SET-STATE', params: urlStore }}))
       } catch (e) {
         document.dispatchEvent(new CustomEvent('action', { detail: { type: 'INIT' }}))
@@ -88,7 +88,7 @@ window.addEventListener('load', PlasmaStore.router);
 // Start with the constructor: Store
 function Component() {
     // Store
-    var initState = {mainNav: 0, subNav: 0, mainNavFrom: 0, subNavFrom: 0};
+    var initState = {nav1: 0, nav2: 0, mainNavFrom: 0, subNavFrom: 0};
     this.store = initState;
     this.initState = initState;
     
@@ -127,7 +127,7 @@ Component.prototype.appReducer = function (state, action) {
         //return action.params
         break;
       case 'GOTO':
-        returnState.subNav = action.params.subNav;  
+        returnState.nav2 = action.params.nav2;
         return returnState;
         break;
       case 'INIT':
@@ -160,8 +160,8 @@ Component.prototype.router = function (event) {
   try {
         urlStore = JSON.parse(decodeURIComponent(url));
         oldStore = JSON.parse(decodeURIComponent(oldHash));
-        urlStore.mainNavFrom = oldStore.mainNav;
-        urlStore.subNavFrom = oldStore.subNav;
+        urlStore.nav1From = oldStore.nav1;
+        urlStore.nav2From = oldStore.nav2;
         document.dispatchEvent(new CustomEvent('action', { detail: { type: 'SET-STATE', params: urlStore }}))
       } catch (e) {
         document.dispatchEvent(new CustomEvent('action', { detail: { type: 'INIT' }}))

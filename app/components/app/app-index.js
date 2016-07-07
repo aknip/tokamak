@@ -28,9 +28,9 @@ component.DEFAULT_OPTIONS = {
 
 component.prototype.redraw = function (store) {
     //TODO: only switch main nav if needed / main nav is different to current scroll state
-    //this.layoutCtrl.setLayoutOptions({mainNav: store.mainNav});
-    //this.startpage.layoutCtrl.goToPage(store.subNav);
-    //this.menu01index.layoutCtrl.goToPage(store.subNav);
+    //this.layoutCtrl.setLayoutOptions({nav1: store.nav1});
+    //this.startpage.layoutCtrl.goToPage(store.nav2);
+    //this.menu01index.layoutCtrl.goToPage(store.nav2);
 }
 
 function _createComponent() {
@@ -66,19 +66,19 @@ function _createComponent() {
         that.layoutCtrl.setLayoutOptions(
             {mochaTestreportZoom: newZoom}
         );
-    })
+    });
 
     var mainLayoutElements = {
         'startpageContext': that.startpage, //startpageHorzScrollView,
         'menu01Index': that.menu01index, // menu01horzScrollView,
         'homeButton': new Surface({content: 'HOME', properties: {color: '#fff', backgroundColor: '#2c3e50'}, classes: ['homebutton']}),
         'mochaTestreport': mochaTestreportSurf
-    }
+    };
    
    
     that.layoutCtrl = new LayoutController({
         layoutOptions: {
-            subNav: that.options.subNav,
+            nav2: that.options.nav2,
             visibleForMainNav: that.options.visibleForMainNav,
             globalLayout: Plasma.globalLayout,
             mochaTestreportZoom: 0.25
@@ -92,7 +92,7 @@ function _createComponent() {
     
     that.layoutCtrl.plasmaLayoutOptions = {};
     that.layoutCtrl.plasmaID = that.options.plasmaID;
-    that.layoutCtrl.mainNav = that.options.visibleForMainNav;
+    that.layoutCtrl.nav1 = that.options.visibleForMainNav;
     
     that.layoutCtrl.plasmaLayouts = {
         desktop: function (context, options) {

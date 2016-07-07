@@ -41,7 +41,7 @@ component.prototype.constructor = component;
 
 component.DEFAULT_OPTIONS = {
     plasmaID: 'startpage',   // internal ID
-    visibleForMainNav: 'startpage'     // determines on which mainNav (URL/store) 
+    visibleForMainNav: 'startpage'     // determines on which mainNav (URL/store)
                              // layout-options are updated => plasma.js line 292 
 };
 
@@ -92,7 +92,7 @@ function _createMainComponent() {
     // Define components behavior for subnavigation
     that.layoutCtrl.redraw = function (store) {
         //console.log('REDRAW startpage');
-        that.layoutCtrlScroll.goToPage(store.subNav, false);
+        that.layoutCtrlScroll.goToPage(store.nav2, false);
     }
         
     // set initial layout as defined in function parameter
@@ -159,7 +159,7 @@ function _createSubComponentScroll() {
                 'front':  surfacePage2
             }
         })
-    ]
+    ];
     
     // register sync classes globally for later use in GenericSync
     GenericSync.register({
@@ -186,11 +186,14 @@ function _createSubComponentScroll() {
         }
     });
     sync.on('end', function(data){
+        console.log('click?');
         // check if surface is clicked
         // or swiped again when already dragged up before (position = -100)
         if ((data.delta == 0) || (position.get() < -99)){
-            if ((Plasma.store.mainNav != 'menu01') || (Plasma.store.subNav != 0) ){
-                Plasma.navigator({mainNav: 'menu01', subNav: 1, animPos: [{animClass: 'startTileBack0'}, {animClass: 'startTileFront0'}, {animClass: 'startTileHead0'}, {animClass: 'startTileDot0'}]})
+            //console.log('click1?');
+            if ((Plasma.store.nav1 != 'menu01') || (Plasma.store.nav2 != 0) ){
+                //console.log('click2?');
+                Plasma.navigator({nav1: 'menu01', nav2: 1, animPos: [{animClass: 'startTileBack0'}, {animClass: 'startTileFront0'}, {animClass: 'startTileHead0'}, {animClass: 'startTileDot0'}]})
                 
                 test2();
             }
@@ -346,14 +349,14 @@ function _createSubComponentScroll() {
 
     that.updateAfterScrollend = Plasma.debounce(function(e) {
         //console.log('Change URL state after scroll // debounced..');
-        var newSubNav = {subNav: that.layoutCtrlScroll.getCurrentIndex()};
+        var newSubNav = {nav2: that.layoutCtrlScroll.getCurrentIndex()};
         document.dispatchEvent(new CustomEvent('action', { detail: { type: 'UPDATE-HASH', params: newSubNav }}))
     }, 800);
 
 
     that.layoutCtrlScroll.on('scrollend', function(event) {
         that.updateAfterScrollend();
-        //var newSubNav = {subNav: this.layoutCtrlScroll.getCurrentIndex()};
+        //var newSubNav = {nav2: this.layoutCtrlScroll.getCurrentIndex()};
         //document.dispatchEvent(new CustomEvent('action', { detail: { type: 'UPDATE-HASH', params: newSubNav }}))
     }.bind(that));
     
@@ -371,7 +374,7 @@ function _clickOnTile(clickedObj) {
         // https://github.com/IjzerenHein/famous-flex/issues/48
         ////console.log(that.layoutCtrlScroll.getSpec(that.layoutCtrlScroll.get(0), true).transform);
         
-        Plasma.navigator({mainNav: 'menu01', subNav: 0, animPos: [{animClass: clickedObj}]})  
+        Plasma.navigator({nav1: 'menu01', nav2: 0, animPos: [{animClass: clickedObj}]})
     };
 }
 
@@ -386,10 +389,10 @@ function _clickOnTile1(el) {
     // https://github.com/IjzerenHein/famous-flex/issues/48
     ////console.log(this.layoutCtrlScroll.getSpec(this.layoutCtrlScroll.get(0), true).transform);
     
-    Plasma.navigator({mainNav: 'menu01', subNav: 0, animPos: [{animClass: 'startTileBack'+clickedObj}]})   
+    Plasma.navigator({nav1: 'menu01', nav2: 0, animPos: [{animClass: 'startTileBack'+clickedObj}]})
     
   
-    //document.dispatchEvent(new CustomEvent('action', { detail: { type: 'SET-STATE', params: {mainNav: 1, subNav: 0} }}));
+    //document.dispatchEvent(new CustomEvent('action', { detail: { type: 'SET-STATE', params: {nav1: 1, nav2: 0} }}));
     
     
     return ;
